@@ -24,6 +24,7 @@ const Header = () => {
   };
   useEffect(() => {
     const closeDropdown = (e) => {
+      console.log(e);
       if (e.path[2].className !== "dropDown") {
         setShow(false);
       }
@@ -85,11 +86,8 @@ const Header = () => {
                   </Link>
                 </div>
               ) : (
-                <div className="dropDown">
-                  <button
-                    className="inline-flex relative items-center bg-gray-200 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0 w-44"
-                    onClick={showDropdown2}
-                  >
+                <div className="dropDown" onClick={showDropdown2}>
+                  <button className="inline-flex relative items-center bg-gray-200 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0">
                     <span className="mr-2">Account Info</span>
                     <AiFillCaretDown />
                   </button>
@@ -102,7 +100,11 @@ const Header = () => {
                     initial={{ opacity: 0, y: "-50%" }}
                     animate={{ opacity: 1, y: "5%" }}
                     exit={{ opacity: 0, y: "-50%" }}
-                    transition={{ type: "spring", duration: "0.6" }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 100,
+                      duration: 0.5,
+                    }}
                     className="accItems absolute top-24 w-48 bg-slate-50 rounded-md shadow-lg flex flex-col items-center justify-start gap-2 md:top-10 md:text-base"
                     ref={dropRef2}
                   >
