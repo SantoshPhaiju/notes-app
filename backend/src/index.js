@@ -1,24 +1,33 @@
 const express = require("express");
-const cors = require("cors")
-const port = process.env.PORT || 8000
-const notes = require("../data/notes")
+const cors = require("cors");
+const notes = require("../data/notes");
+const connnectToDb = require("../config/db");
+const dotenv = require("dotenv");
+const { errorHandler, notFound } = require("../middlewares/errorMiddleware");
+
+dotenv.config();
+const port = process.env.PORT;
 
 const app = express();
 app.use(cors());
+connnectToDb();
+app.use(express.json());
 
-app.get("/", (req, res) =>{
+
+app.get("/", (req, res) => {
     res.send("This api is running here");
-})
+});
 
-app.get("/api/notes", (req, res) =>{
-    res.json(notes)
-})
+// Routes for the api
 
-app.get("/api/notes/:id", (req, res) =>{
-    const note = notes.find((n) => n._id === req.params.id);
-    res.json(note);
-})
+app.use("/api/auth", require("../routes/auth"));
+// app.use("/api/notes", require("../routes/notes"))
 
-app.listen(port, () =>{
-    console.log(`Backend running on the http://localhost:${port}`)
-})
+
+
+app.use(notFound);
+app.use(errorHandler);
+
+app.listen(port, () => {
+  console.log(`Backend running on the http://localhost:${port}`);
+});
