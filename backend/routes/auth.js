@@ -1,6 +1,6 @@
 const express = require("express");
 const { body } = require("express-validator");
-const { registerUser, loginUser, getuserdata } = require("../controllers/authControllers");
+const { registerUser, loginUser, getuserdata, forgetpassword, resetpassword } = require("../controllers/authControllers");
 const fetchuser = require("../middlewares/fetchuser");
 const router = express();
 
@@ -22,7 +22,9 @@ router.get("/getuserdata", fetchuser, getuserdata)
 
 
 // ROUTE 4 : Forget Password : Login not required
+router.post("/forgetpassword", forgetpassword)
 
 // ROUTE 5 : Reset Password : Login not required
+router.put("/resetpassword/:resetToken", resetpassword);
 
 module.exports = router;
