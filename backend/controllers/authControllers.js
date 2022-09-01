@@ -115,8 +115,6 @@ const resetpassword = async (req, res) => {
       resetPasswordExpire: { $gt: Date.now() },
     });
 
-    console.log(user);
-
     if(!user){
       res.status(400).send({error: "Reset password token expired"});
     }
