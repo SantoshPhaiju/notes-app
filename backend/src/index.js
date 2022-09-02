@@ -3,6 +3,7 @@ const cors = require("cors");
 const notes = require("../data/notes");
 const connnectToDb = require("../config/db");
 const dotenv = require("dotenv");
+const path = require("path")
 const { errorHandler, notFound } = require("../middlewares/errorMiddleware");
 
 dotenv.config();
@@ -17,6 +18,8 @@ app.use(express.json());
 app.get("/", (req, res) => {
     res.send("This api is running here");
 });
+
+app.use(express.static(path.join(__dirname, "./uploads")))
 
 // Routes for the api
 
