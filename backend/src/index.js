@@ -24,7 +24,7 @@ app.use(express.static(path.join(__dirname, "./uploads")))
 // Routes for the api
 
 app.use("/api/auth", require("../routes/auth"));
-// app.use("/api/notes", require("../routes/notes"))
+app.use("/api/notes", require("../routes/notes"));
 
 
 

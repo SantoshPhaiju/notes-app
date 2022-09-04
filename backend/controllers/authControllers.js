@@ -142,7 +142,7 @@ const resetpassword = async (req, res) => {
 const updateUserProfile = async (req, res) =>{
   try {
     const user = await User.findById(req.user.id).select("-password");
-    const {username, email, picture} = req.body;
+    const {username, email} = req.body;
     console.log(req.file);
     if(user){
       const basename = path.basename(user.picture);
