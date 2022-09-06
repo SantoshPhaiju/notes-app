@@ -1,24 +1,43 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useFormik } from "formik";
 import { loginSchema } from "../schemas";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../redux/action-creators";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const credentials = {
-    email: "",
-    password: ""
-  }
-  const {handleBlur, handleSubmit, handleChange, errors, values, touched} = useFormik({
-    initialValues: credentials,
-    validationSchema: loginSchema,
-    onSubmit: (values, action) =>{
-      console.log(values);
-      action.resetForm();
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      navigate("/");
+      console.log(data);
     }
   });
+  const credentials = {
+    email: "",
+    password: "",
+  };
+  const userLogin = useSelector((state) => state.login);
+  const { data } = userLogin;
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { handleBlur, handleSubmit, handleChange, errors, values, touched } =
+    useFormik({
+      initialValues: credentials,
+      validationSchema: loginSchema,
+      onSubmit: (values, action) => {
+        console.log(values);
+        dispatch(login(values.email, values.password));
+        action.resetForm();
+      },
+    });
+
   return (
     <>
       <div className="w-full max-w-xs m-auto mt-20">
-        <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+        >
           <div className="mb-4">
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
@@ -37,9 +56,9 @@ const Login = () => {
               value={values.email}
               required
             />
-            {errors.email && touched.email ? <p className="text-red-500 text-xs italic">
-              {errors.email}
-            </p> : null}
+            {errors.email && touched.email ? (
+              <p className="text-red-500 text-xs italic">{errors.email}</p>
+            ) : null}
           </div>
           <div className="mb-6">
             <label
@@ -60,9 +79,9 @@ const Login = () => {
               value={values.password}
               required
             />
-            {errors.password && touched.password ? <p className="text-red-500 text-xs italic">
-             {errors.password}
-            </p> : null}
+            {errors.password && touched.password ? (
+              <p className="text-red-500 text-xs italic">{errors.password}</p>
+            ) : null}
           </div>
           <div className="flex items-center justify-between">
             <button

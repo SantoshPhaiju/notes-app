@@ -1,5 +1,6 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../logo.png";
 import { AiFillCaretDown } from "react-icons/ai";
 import { MdAccountCircle } from "react-icons/md";
@@ -7,13 +8,20 @@ import { TbLogout } from "react-icons/tb";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { ImCross } from "react-icons/im";
 import { AnimatePresence, motion } from "framer-motion";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../redux/action-creators";
 
 const Header = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const logoutHandler = () => {
+    dispatch(logout());
+    navigate("/login");
+  };
   const dropRef2 = useRef();
   const [show, setShow] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
-  // eslint-disable-next-line no-unused-vars
-  const [login, setLogin] = useState(true);
+  // eslint-disable-next-line
 
   const showResMenu = () => {
     setShowMenu(!showMenu);
@@ -24,7 +32,6 @@ const Header = () => {
   };
   useEffect(() => {
     const closeDropdown = (e) => {
-      console.log(e);
       if (e.path[2].className !== "dropDown") {
         setShow(false);
       }
@@ -70,7 +77,7 @@ const Header = () => {
             </nav>
 
             <div className="buttons flex justify-center items-center md:absolute md:right-12 xl:right-20 2xl:right-36">
-              {!login ? (
+              {!localStorage.getItem("token") ? (
                 <div className="noLoginBtns inline-block mr-2 space-x-2">
                   <Link
                     to="/login"
@@ -109,13 +116,16 @@ const Header = () => {
                     ref={dropRef2}
                   >
                     <Link
-                      to="/"
+                      to="/profile"
                       className="hover:bg-slate-200 py-2 px-6 rounded-md"
                     >
                       <MdAccountCircle className="inline-block mr-2 text-xl" />
                       Your Profile
                     </Link>
-                    <button className="hover:bg-slate-200 py-2 px-6 w-[100%] rounded-md">
+                    <button
+                      className="hover:bg-slate-200 py-2 px-6 w-[100%] rounded-md"
+                      onClick={logoutHandler}
+                    >
                       <TbLogout className="inline-block mr-2 text-xl" /> Logout
                     </button>
                   </motion.div>

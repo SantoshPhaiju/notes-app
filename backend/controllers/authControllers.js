@@ -5,7 +5,7 @@ const generateToken = require("../utils/generateToken");
 const sendEmail = require("../utils/sendEmail");
 const crypto = require("crypto");
 const fs = require("fs");
-const path = require('path')
+const path = require("path");
 
 // Register user route contorller
 
@@ -15,27 +15,39 @@ const registerUser = asyncHandler(async (req, res) => {
   const { username, email, password } = req.body;
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+    return res.status(400).json({ errors: errors.array()[0].msg });
   }
 
-  const existsUser = await User.findOne({ email });
+  const existsUser = await User.findOne({ email }).select("-password");
 
   if (existsUser) {
-    res.status(400).send({ error: "Users already exists with this email" });
+    res.status(400).send({ success: false, error: "Users already exists with this email" });
     throw new Error("User already exists with this email");
   } else {
-    const picture = `http://localhost:8000/${req.file.filename}`;
-    const user = await User.create({
-      username,
-      email,
-      password,
-      picture,
-    });
-
-    if (user) {
-      res.status(201).json({ user });
+    if (req.file) {
+      const picture = `http://localhost:8000/${req.file.filename}`;
+      const user = await User.create({
+        username,
+        email,
+        password,
+        picture,
+      });
+      if (user) {
+        res.status(201).json({success: true, data: "Successfully signed in"});
+      } else {
+        res.status(400).json({ success: false, error: errors.array()[0].msg });
+      }
     } else {
-      res.status(400).json({ error: "Internal Server Error" });
+      const user = await User.create({
+        username,
+        email,
+        password,
+      });
+      if (user) {
+        res.status(201).json({success: true, data: "Successfully signed in"});
+      } else {
+        res.status(400).json({ success: false, error: errors.array()[0].msg });
+      }
     }
   }
 });
@@ -56,6 +68,7 @@ const loginUser = asyncHandler(async (req, res) => {
     res.json({ success: true, msg: "Successfully loggedin", token: token });
   } else {
     res.json({
+      success: false,
       error:
         "Invalid credentials. Please try to login with correct credentials",
     });
@@ -137,42 +150,40 @@ const resetpassword = async (req, res) => {
   }
 };
 
-
 // Router controller for uploading images of the user and updating profile
-const updateUserProfile = async (req, res) =>{
+const updateUserProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
-    const {username, email} = req.body;
+    const { username, email } = req.body;
     console.log(req.file);
-    if(user){
+    if (user) {
       const basename = path.basename(user.picture);
-      console.log(basename)
-      if(req.file){
-        fs.unlink(path.join(__dirname, `../src/uploads/${basename}`), (err) =>{
-          if(err){
-            return res.status(400).send({error: err});
+      console.log(basename);
+      if (req.file) {
+        fs.unlink(path.join(__dirname, `../src/uploads/${basename}`), (err) => {
+          if (err) {
+            return res.status(400).send({ error: err });
           }
-        })
+        });
         const updatedPicture = `http://localhost:8000/${req.file.filename}`;
         user.picture = updatedPicture;
-      }else{
+      } else {
         user.picture = user.picture;
       }
       user.username = username || user.username;
       user.email = email || user.email;
-      
-      const updatedUser = await user.save();
-  
-      res.json({success: true, result: updatedUser});
-    }else{
-      res.status(400).send({error: "User is not valid"})
-    }
 
+      const updatedUser = await user.save();
+
+      res.json({ success: true, result: updatedUser });
+    } else {
+      res.status(400).send({ error: "User is not valid" });
+    }
   } catch (error) {
-    res.status(500).send({error: "Internal Server Error"})
+    res.status(500).send({ error: "Internal Server Error" });
     console.log(error);
   }
-}
+};
 
 // Getting user data route controller
 
@@ -186,5 +197,5 @@ module.exports = {
   getuserdata,
   forgetpassword,
   resetpassword,
-  updateUserProfile
+  updateUserProfile,
 };
