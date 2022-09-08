@@ -3,9 +3,11 @@ import { useFormik } from "formik";
 import { loginSchema } from "../schemas";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../redux/action-creators";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const userLogin = useSelector((state) => state.login);
+  const { data } = userLogin;
   useEffect(() => {
     if (localStorage.getItem("token")) {
       navigate("/");
@@ -16,8 +18,6 @@ const Login = () => {
     email: "",
     password: "",
   };
-  const userLogin = useSelector((state) => state.login);
-  const { data } = userLogin;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { handleBlur, handleSubmit, handleChange, errors, values, touched } =
@@ -90,12 +90,12 @@ const Login = () => {
             >
               Log In
             </button>
-            <a
+            <Link
               className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
-              href="/"
+              to="/forgetpassword"
             >
               Forgot Password?
-            </a>
+            </Link>
           </div>
         </form>
       </div>

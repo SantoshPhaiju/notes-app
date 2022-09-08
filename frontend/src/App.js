@@ -6,6 +6,8 @@ import Footer from "./components/Footer";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Profile from "./components/Profile";
+import ForgetPassword from "./components/ForgetPassword";
+import ResetPassword from "./components/ResetPassword";
 
 const App = () => {
   return (
@@ -19,6 +21,8 @@ const App = () => {
           <Route exact path="/login" element={<Login />}></Route>
           <Route exact path="/register" element={<Register />}></Route>
           <Route exact path="/profile" element={<Profile />}></Route>
+          <Route exact path="/forgetpassword" element={<ForgetPassword />}></Route>
+          <Route exact path="/resetpassword/:resetToken" element={<ResetPassword />}></Route>
         </Routes>
         </div>
         <Footer />

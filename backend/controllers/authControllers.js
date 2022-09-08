@@ -9,7 +9,7 @@ const path = require("path");
 
 // Register user route contorller
 
-const registerUser = asyncHandler(async (req, res) => {
+const registerUser = async (req, res) => {
   console.log(req.file);
   console.log(req.body);
   const { username, email, password } = req.body;
@@ -21,8 +21,10 @@ const registerUser = asyncHandler(async (req, res) => {
   const existsUser = await User.findOne({ email }).select("-password");
 
   if (existsUser) {
-    res.status(400).send({ success: false, error: "Users already exists with this email" });
-    throw new Error("User already exists with this email");
+    res
+      .status(400)
+      .send({ success: false, error: "Users already exists with this email" });
+    // throw new Error("User already exists with this email");
   } else {
     if (req.file) {
       const picture = `http://localhost:8000/${req.file.filename}`;
@@ -33,7 +35,7 @@ const registerUser = asyncHandler(async (req, res) => {
         picture,
       });
       if (user) {
-        res.status(201).json({success: true, data: "Successfully signed in"});
+        res.status(201).json({ success: true, data: "Successfully signed in" });
       } else {
         res.status(400).json({ success: false, error: errors.array()[0].msg });
       }
@@ -44,13 +46,13 @@ const registerUser = asyncHandler(async (req, res) => {
         password,
       });
       if (user) {
-        res.status(201).json({success: true, data: "Successfully signed in"});
+        res.status(201).json({ success: true, data: "Successfully signed in" });
       } else {
         res.status(400).json({ success: false, error: errors.array()[0].msg });
       }
     }
   }
-});
+};
 
 // Login User route controller
 
@@ -83,7 +85,9 @@ const forgetpassword = async (req, res) => {
   try {
     const user = await User.findOne({ email });
     if (!user) {
-      res.status(400).send("User doesn't exists with this email");
+      res
+        .status(400)
+        .send({ msg: "User doesn't exists with this email", success: false });
     } else {
       const resetToken = await user.getResetPasswordToken();
       await user.save();
@@ -102,7 +106,10 @@ const forgetpassword = async (req, res) => {
           subject: "Reset Your password for notesapp",
           text: message,
         });
-        res.status(201).send({ success: true, msg: "Email successfully sent" });
+        res.status(201).send({
+          success: true,
+          msg: "Reset password link is successfully sent to your email. Plese go through that link for further procedure.",
+        });
       } catch (error) {
         user.resetPasswordToken = undefined;
         user.resetPasswordExpire = undefined;
@@ -114,13 +121,13 @@ const forgetpassword = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    res.status(500).send({ error: "Internal Server Error" });
+    res.status(500).send({ error: error, success: false });
   }
 };
 
 // Reset password route controller
 const resetpassword = async (req, res) => {
-  const { password } = req.body.password;
+  const { password } = req.body;
   const resetToken = req.params.resetToken;
 
   const resetPasswordToken = crypto
@@ -135,7 +142,7 @@ const resetpassword = async (req, res) => {
     });
 
     if (!user) {
-      res.status(400).send({ error: "Reset password token expired" });
+      res.status(400).send({ msg: "Reset password token expired" });
     }
     user.password = password;
     user.resetPasswordExpire = undefined;
@@ -143,7 +150,12 @@ const resetpassword = async (req, res) => {
 
     await user.save();
 
-    res.status(201).send({ success: true, msg: "Password reset successfull" });
+    res
+      .status(201)
+      .send({
+        success: true,
+        msg: "Password reset successfull now you can continue with login",
+      });
   } catch (error) {
     console.log(error);
     res.status(400).send({ error: error.message, success: false });

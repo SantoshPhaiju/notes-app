@@ -20,8 +20,34 @@ export const userRegisterReducer = (state = {}, action) => {
     case "USER_REGISTER_SUCCESSFULL":
       return { loading: false, data: action.payload, success: true };
     case "USER_REGISTER_FAIL":
-      return { loading: false, data: action.payload, success: false };
+      return { loading: false, errorMsg: action.payload, success: false };
     default:
-      return { loading: false, success: null};
+      return { loading: false, success: false, errorMsg: null };
+  }
+};
+
+export const forgetPasswordReducer = (state = {}, action) => {
+  switch (action.type) {
+    case "FORGET_PASSWORD_REQUEST":
+      return { loading: true};
+    case "SUCCESSFULLY_SENT":
+      return { loading: false, data: action.payload };
+    case "SEND_FAIL":
+      return { loading: false, data: action.payload };
+    default:
+      return { loading: false };
+  }
+};
+
+export const resetPasswordReducer = (state = {}, action) => {
+  switch (action.type) {
+    case "RESET_PASSWORD_REQUEST":
+      return { loading: true};
+    case "SUCCESSFULLY_RESET":
+      return { loading: false, data: action.payload };
+    case "RESET_FAIL":
+      return { loading: false, data: action.payload };
+    default:
+      return { loading: false };
   }
 };

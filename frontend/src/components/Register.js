@@ -5,6 +5,8 @@ import { signupSchema } from "../schemas";
 import { FcAddImage } from "react-icons/fc";
 import { useDispatch, useSelector } from "react-redux";
 import { register } from "../redux/action-creators";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Register = () => {
   const [selectedImage, setSelectedImage] = useState([]);
@@ -17,37 +19,58 @@ const Register = () => {
 
   const dispatch = useDispatch();
   const userRegister = useSelector((state) => state.userRegister);
-  const { data, success } = userRegister;
-  const [error, setError] = useState(null);
-  useEffect(() =>{
-    if(success === false && data !== undefined){
-      setError(data.error);
-    }else if(success === true){
-      setError(null);
-      navigate("/login")
+  const { data, success, errorMsg } = userRegister;
+  useEffect(() => {
+    if (success === false && data !== undefined) {
+      console.log(errorMsg);
+    } else if (success === true) {
+      toast.success("Successfully registered. Now you can continue with login", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [success])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [success]);
 
   const credentials = {
     email: "",
     username: "",
     password: "",
     cpassword: "",
+    picture: "",
   };
-  const { values, handleBlur, touched, handleSubmit, errors, handleChange } =
-    useFormik({
-      initialValues: credentials,
-      validationSchema: signupSchema,
-      onSubmit: (values, action) => {
-        // console.log(values);
-        dispatch(register(values.username, values.email, values.password));
-        action.resetForm();
-      },
-    });
+  const {
+    values,
+    handleBlur,
+    touched,
+    handleSubmit,
+    errors,
+    handleChange,
+    setFieldValue,
+  } = useFormik({
+    initialValues: credentials,
+    validationSchema: signupSchema,
+    onSubmit: (values, action) => {
+      // console.log("image = " + image, "value " + values.picture);
+      const formdata = new FormData();
+      formdata.append("username", values.username);
+      formdata.append("email", values.email);
+      formdata.append("password", values.password);
+      if (values.picture) {
+        formdata.append("picture", values.picture, values.picture.name);
+      }
+      dispatch(register(formdata));
+      action.resetForm();
+    },
+  });
 
   const onSelectFile = (e) => {
-    console.log(e.target.files);
+    console.log(e.currentTarget.files[0]);
     const selectedFile = e.target.files;
     const selectedFileArray = Array.from(selectedFile);
 
@@ -55,20 +78,35 @@ const Register = () => {
       return URL.createObjectURL(file);
     });
 
-    // console.log(imageArray);
+    console.log(imageArray);
     setSelectedImage(imageArray);
+    setFieldValue("picture", e.target.files[0]);
   };
 
   return (
     <div>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <div className="w-full max-w-xs m-auto mt-20">
-        {error && data ? (
-          <p className="text-red-700 text-center">{data.error}</p>
-        ): null }
+        <p
+          className={`${errorMsg} !== ${null} ? 'block': 'hidden' text-red-700 text-center `}
+          aria-live="assertive"
+        >
+          {errorMsg}
+        </p>
+
         <form
           onSubmit={handleSubmit}
           className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-          encType="multipart/form-data"
         >
           <div className="mb-4">
             <label
@@ -174,12 +212,11 @@ const Register = () => {
             <input
               className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline hidden"
               id="picture"
-              autoComplete="off"
               type="file"
               name="picture"
               onChange={onSelectFile}
               onBlur={handleBlur}
-              accept="image/png, image/jpeg, image/jpg, image/webp"
+              accept="image.png, image.jpeg, image.jpg, image.webp"
             />
           </div>
           {selectedImage &&
