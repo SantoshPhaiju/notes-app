@@ -87,7 +87,13 @@ const ResetPassword = () => {
         <div className="mb-4">
           {data && (
             <p className="text-center text-white p-2 bg-green-700">
-              {data} <Link to="/login" className="text-blue-400 hover:underline font-sans">Login</Link>
+              {data}{" "}
+              <Link
+                to="/login"
+                className="text-blue-400 hover:underline font-sans"
+              >
+                Login
+              </Link>
             </p>
           )}
         </div>

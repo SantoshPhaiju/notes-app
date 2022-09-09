@@ -29,7 +29,7 @@ export const userRegisterReducer = (state = {}, action) => {
 export const forgetPasswordReducer = (state = {}, action) => {
   switch (action.type) {
     case "FORGET_PASSWORD_REQUEST":
-      return { loading: true};
+      return { loading: true };
     case "SUCCESSFULLY_SENT":
       return { loading: false, data: action.payload };
     case "SEND_FAIL":
@@ -42,7 +42,7 @@ export const forgetPasswordReducer = (state = {}, action) => {
 export const resetPasswordReducer = (state = {}, action) => {
   switch (action.type) {
     case "RESET_PASSWORD_REQUEST":
-      return { loading: true};
+      return { loading: true };
     case "SUCCESSFULLY_RESET":
       return { loading: false, data: action.payload };
     case "RESET_FAIL":

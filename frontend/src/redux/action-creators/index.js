@@ -88,8 +88,8 @@ export const resetpassword = (password, resetToken) => async (dispatch) => {
         method: "PUT",
         body: JSON.stringify({ password: password }),
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       }
     );
     const data = await response.json();

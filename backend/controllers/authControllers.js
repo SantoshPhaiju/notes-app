@@ -150,12 +150,10 @@ const resetpassword = async (req, res) => {
 
     await user.save();
 
-    res
-      .status(201)
-      .send({
-        success: true,
-        msg: "Password reset successfull now you can continue with login",
-      });
+    res.status(201).send({
+      success: true,
+      msg: "Password reset successfull now you can continue with login",
+    });
   } catch (error) {
     console.log(error);
     res.status(400).send({ error: error.message, success: false });
