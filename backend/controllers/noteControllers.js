@@ -51,9 +51,9 @@ const getNote = async (req, res) => {
   try {
     const note = await Note.find({ _id: id, user: req.user._id });
     if (note) {
-       res.status(200).send({ note: note });
+      res.status(200).send({ note: note });
     } else {
-     res.status(400).send("Note not found");
+      res.status(400).send("Note not found");
     }
   } catch (error) {
     res.status(500).send({ error: "Internal Server Error" });
@@ -83,13 +83,13 @@ const updateNote = async (req, res) => {
       }
     }
     if (description) {
-        if (!validator.isLength(description, { min: 6 })) {
-            return res
-              .status(400)
-              .send({ error: "description must be at least 6 character long" });
-          } else {
-            newNote.description = description;
-          }
+      if (!validator.isLength(description, { min: 6 })) {
+        return res
+          .status(400)
+          .send({ error: "description must be at least 6 character long" });
+      } else {
+        newNote.description = description;
+      }
     }
     if (category) {
       newNote.category = category;
@@ -118,25 +118,30 @@ const updateNote = async (req, res) => {
   }
 };
 
-
 // Controller 5 for deleting note using noteid
-const deleteNote = async (req, res) =>{
-    const noteId = req.params.id;
+const deleteNote = async (req, res) => {
+  const noteId = req.params.id;
 
-    try {
-        const note = await Note.findById(noteId);
-        if(note){
-            if(note.user.toString() !== req.user.id){
-                return res.status(400).send({error: "Not a valid user"})
-            }else{
-                const deletedNote = await Note.findByIdAndDelete(noteId);
-                res.status(200).send({success: true, result: "Note has been successfully deleted", note:deletedNote});
-            }
-        }
-    } catch (error) {
-        console.log(error);
-        res.status(500).send({error: "Internal Server error"});
+  try {
+    const note = await Note.findById(noteId);
+    if (note) {
+      if (note.user.toString() !== req.user.id) {
+        return res.status(400).send({ error: "Not a valid user" });
+      } else {
+        const deletedNote = await Note.findByIdAndDelete(noteId);
+        res
+          .status(200)
+          .send({
+            success: true,
+            result: "Note has been successfully deleted",
+            note: deletedNote,
+          });
+      }
     }
-}
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: "Internal Server error" });
+  }
+};
 
 module.exports = { addNote, fetchNotes, getNote, updateNote, deleteNote };

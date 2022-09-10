@@ -1,17 +1,17 @@
 import React, { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 const NotesItem = () => {
   const [show, setShow] = useState(false);
   return (
     <>
       <div className="itemContainer my-4">
-        <div
-          className="items border-2 rounded-md bg-gray-200"
-        >
+        <div className="items rounded-md border-2 bg-gray-200 overflow-hidden">
           <div
-            className="header mt-0 flex justify-between items-center bg-gray-200 text-gray-800 py-2 px-6 text-lg rounded-t-md"
-            onClick={() => setShow(!show)}
+            className="header mt-0 flex justify-between items-center bg-gray-200 text-gray-800 py-2 px-6 text-lg rounded-t-md z-10 cursor-pointer"
+            onClick={() => {
+              setShow(!show);
+            }}
           >
             <h2 className="text-lg">Title</h2>
             <div className="buttons flex space-x-5">
@@ -24,22 +24,28 @@ const NotesItem = () => {
             </div>
           </div>
 
-          {show && (
+          <AnimatePresence>
             <>
-              <motion.div
-                initial={{ opacity: 0, y: -50 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -50 }}
-                transition={{ duration: 0.4 }}
-                className="body py-4 px-8 bg-slate-50 shadow-sm"
-              >
-                <div className="description">body here</div>
-                <blockquote className="text-gray-400 mt-3 font-sans italic">
-                  - Someone famous
-                </blockquote>
-              </motion.div>
+              {show && (
+                <motion.div
+                  animate={{ opacity: 1, y: "0px" }}
+                  transition={{ duration: 1 }}
+                  className="body py-4 px-8 bg-slate-50 shadow-sm"
+                >
+
+                  <div className="description">
+                  <span class="bg-orange-400 text-white text-sm font-semibold mr-2 px-4 py-1 rounded dark:bg-orange-400 dark:text-white">Category - Something</span>
+                  <p className="mt-2 mb-5">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil ab illo vel. Fugiat rem repudiandae ut ad dolores atque laborum architecto delectus sint eveniet, cupiditate nulla aut voluptas! Officiis, eligendi.
+                  </p>
+                  </div>
+                  <blockquote className="text-gray-400 mt-3 font-sans italic">
+                    - Created On -date
+                  </blockquote>
+                </motion.div>
+              )}
             </>
-          )}
+          </AnimatePresence>
         </div>
       </div>
     </>
