@@ -102,3 +102,50 @@ export const resetpassword = (password, resetToken) => async (dispatch) => {
     dispatch({ type: "RESET_FAIL", payload: error });
   }
 };
+
+// =====================================================
+// Notes actionCreaters starts here
+// =====================================================
+
+export const getNote = () => async (dispatch) => {
+  dispatch({ type: "NOTES_REQUEST" });
+
+  try {
+    const token = JSON.parse(localStorage.getItem("token"));
+    const response = await fetch(
+      "http://localhost:8000/api/notes/fetchallnotes",
+      {
+        method: "GET",
+        headers: {
+          "auth-token": token,
+        },
+      }
+    );
+    const data = await response.json();
+    if (data) {
+      dispatch({ type: "NOTES_SUCCESS", payload: data });
+    }
+  } catch (error) {
+    dispatch({ type: "NOTES_FAIL", payload: error });
+  }
+};
+
+export const addNote =
+  (title, description, category, token) => async (dispatch) => {
+    dispatch({ type: "ADD_NOTE_REQUEST" });
+
+      const response = await fetch("http://localhost:8000/api/notes/addnote", {
+        method: "POST",
+        headers: {
+          "auth-token": token,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ title, description, category }),
+      });
+      const data = await response.json();
+
+      if (data) {
+        dispatch({ type: "ADD_NOTE_SUCCESS", data });
+      } 
+    
+  };

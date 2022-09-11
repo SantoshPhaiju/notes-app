@@ -1,8 +1,14 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-
-const NotesItem = () => {
+const NotesItem = (props) => {
   const [show, setShow] = useState(false);
+
+  const dbDate = props.data.createdAt;
+  const date = new Date(dbDate);
+  const createdAtDate = date.toLocaleDateString();
+  const createdAtTime = date.toLocaleTimeString();
+
+  
   return (
     <>
       <div className="itemContainer my-4">
@@ -13,7 +19,7 @@ const NotesItem = () => {
               setShow(!show);
             }}
           >
-            <h2 className="text-lg">Title</h2>
+            <h2 className="text-lg">{props.data.title}</h2>
             <div className="buttons flex space-x-5">
               <button className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-1 px-6 rounded focus:outline-none focus:shadow-outline">
                 Edit
@@ -32,15 +38,14 @@ const NotesItem = () => {
                   transition={{ duration: 1 }}
                   className="body py-4 px-8 bg-slate-50 shadow-sm"
                 >
-
                   <div className="description">
-                  <span class="bg-orange-400 text-white text-sm font-semibold mr-2 px-4 py-1 rounded dark:bg-orange-400 dark:text-white">Category - Something</span>
-                  <p className="mt-2 mb-5">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil ab illo vel. Fugiat rem repudiandae ut ad dolores atque laborum architecto delectus sint eveniet, cupiditate nulla aut voluptas! Officiis, eligendi.
-                  </p>
+                    <span className="bg-orange-400 text-white text-sm font-semibold mr-2 px-4 py-1 rounded dark:bg-orange-400 dark:text-white">
+                      Category - {props.data.category}
+                    </span>
+                    <p className="mt-2 mb-5">{props.data.description}</p>
                   </div>
                   <blockquote className="text-gray-400 mt-3 font-sans italic">
-                    - Created On -date
+                    - Created On {createdAtDate} {createdAtTime}
                   </blockquote>
                 </motion.div>
               )}

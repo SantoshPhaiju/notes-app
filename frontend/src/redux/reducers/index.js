@@ -1,4 +1,5 @@
 import { combineReducers } from "redux";
+import { addNoteReducer, getNotesReducer } from "./notesReducers";
 import {
   forgetPasswordReducer,
   resetPasswordReducer,
@@ -11,4 +12,6 @@ export const reducers = combineReducers({
   userRegister: userRegisterReducer,
   forgetPassword: forgetPasswordReducer,
   resetPassword: resetPasswordReducer,
+  fetchAllNotes: getNotesReducer,
+  addNote: addNoteReducer,
 });

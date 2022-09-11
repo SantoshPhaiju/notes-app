@@ -19,9 +19,9 @@ const addNote = async (req, res) => {
       user: req.user._id,
     });
     if (note) {
-      res.status(200).send({ success: true, data: note });
+      res.status(201).json({ success: true, data: note, msg: "Note added successfully." });
     } else {
-      res.status(400).send({ error: "Something went wrong" });
+      res.status(400).send({ success: false, error: "Something went wrong" });
     }
   } catch (error) {
     res.status(500).send({ error: "Internal Server Error" });

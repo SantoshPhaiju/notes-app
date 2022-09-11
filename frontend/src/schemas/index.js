@@ -28,3 +28,10 @@ export const resetPasswordSchema = Yup.object({
     .required()
     .oneOf([Yup.ref("password"), null], "Passwords donot match"),
 })
+
+
+export const addNoteSchema = Yup.object({
+  title: Yup.string().min(2).required("Title must be at least 2 character long"),
+  description: Yup.string().min(10).required("Description must be at least 10 characters long."),
+  category: Yup.string().required("Category cannot be empty"),
+})

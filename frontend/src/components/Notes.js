@@ -1,8 +1,36 @@
 import React, { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-
+import { useFormik } from "formik";
+import { addNoteSchema } from "../schemas";
+import { useDispatch } from "react-redux";
+import { addNote } from "../redux/action-creators";
+import { } from "react-router-dom";
 const Notes = () => {
   const [show, setShow] = useState(false);
+
+  const noteData = {
+    title: "",
+    description: "",
+    category: "",
+  };
+  const dispatch = useDispatch();
+  const token = JSON.parse(localStorage.getItem("token"));
+  // const navigate = useNavigate();
+
+  const { handleBlur, handleSubmit, handleChange, errors, values, touched } =
+    useFormik({
+      initialValues: noteData,
+      validationSchema: addNoteSchema,
+      onSubmit: (values, action) => {
+        setShow(false);
+        console.log(values);
+        document.body.removeAttribute("style");
+        dispatch(
+          addNote(values.title, values.description, values.category, token)
+        );
+        action.resetForm();
+      },
+    });
   return (
     <>
       <div className="addBtn">
@@ -29,7 +57,7 @@ const Notes = () => {
             >
               <div className="modal ">
                 <h1 className="text-2xl text-center my-2">Add Note</h1>
-                <form className="w-[70%] mx-auto">
+                <form className="w-[70%] mx-auto" onSubmit={handleSubmit}>
                   <div className="mb-6">
                     <label htmlFor="title">
                       <input
@@ -38,10 +66,18 @@ const Notes = () => {
                         id="title"
                         name="title"
                         placeholder="Title"
-                        required
                         min={2}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        value={values.title}
+                        required
                       />
                     </label>
+                    {errors.title && touched.title ? (
+                      <p className="text-red-500 text-xs italic">
+                        {errors.title}
+                      </p>
+                    ) : null}
                   </div>
                   <div className="mb-6">
                     <label htmlFor="category">
@@ -51,21 +87,36 @@ const Notes = () => {
                         id="category"
                         name="category"
                         placeholder="Category"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        value={values.category}
                         required
                       />
                     </label>
+                    {errors.category && touched.category ? (
+                      <p className="text-red-500 text-xs italic">
+                        {errors.category}
+                      </p>
+                    ) : null}
                   </div>
                   <div className="mb-6">
-                    <label htmlFor="category">
+                    <label htmlFor="description">
                       <textarea
                         className="shadow focus:shadow py-2 text-purple-600 px-4 font-serif text-lg w-[100%] border-2 rounded-md focus:outline-none focus:border-2 focus:border-blue-900"
-                        type="desc"
-                        id="desc"
-                        name="desc"
+                        id="description"
+                        name="description"
                         placeholder="Description"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        value={values.description}
                         required
                       />
                     </label>
+                    {errors.description && touched.description ? (
+                      <p className="text-red-500 text-xs italic">
+                        {errors.description}
+                      </p>
+                    ) : null}
                   </div>
 
                   <div className="buttons mb-6 flex justify-center space-x-8">
@@ -79,9 +130,7 @@ const Notes = () => {
                       className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-56"
                       onClick={() => {
                         setShow(!show);
-                        document.body.removeAttribute(
-                          "style"
-                        );
+                        document.body.removeAttribute("style");
                       }}
                       type="button"
                     >
