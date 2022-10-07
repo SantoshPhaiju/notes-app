@@ -8,7 +8,6 @@ const NotesItem = (props) => {
   const createdAtDate = date.toLocaleDateString();
   const createdAtTime = date.toLocaleTimeString();
 
-  
   return (
     <>
       <div className="itemContainer my-4">
