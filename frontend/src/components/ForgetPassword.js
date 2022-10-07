@@ -2,20 +2,13 @@ import React, {  } from "react";
 import { useFormik } from "formik";
 import { emailSchema } from "../schemas";
 import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { forgetpassword } from "../redux/action-creators";
 
 const ForgetPassword = () => {
-  const userforgetpassword = useSelector((state) => state.forgetPassword);
-  const { data } = userforgetpassword;
-  const dispatch = useDispatch();
   const { handleBlur, handleSubmit, handleChange, errors, values, touched } =
   useFormik({
       initialValues: { email: "" },
       validationSchema: emailSchema,
       onSubmit: (values, action) => {
-        console.log(values.email, data);
-        dispatch(forgetpassword(values.email));
         action.resetForm();
       },
     });
@@ -67,11 +60,7 @@ const ForgetPassword = () => {
         </div>
 
         <div className="mb-4">
-          {data && (
-            <p className="text-center text-white p-2 bg-green-700">
-              {data}
-            </p>
-          )}
+          
         </div>
       </form>
     </div>

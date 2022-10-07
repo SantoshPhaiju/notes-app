@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useFormik } from "formik";
 import { addNoteSchema } from "../schemas";
-import { useDispatch } from "react-redux";
-import { addNote } from "../redux/action-creators";
 import { } from "react-router-dom";
 const Notes = () => {
   const [show, setShow] = useState(false);
@@ -13,9 +11,6 @@ const Notes = () => {
     description: "",
     category: "",
   };
-  const dispatch = useDispatch();
-  const token = JSON.parse(localStorage.getItem("token"));
-  // const navigate = useNavigate();
 
   const { handleBlur, handleSubmit, handleChange, errors, values, touched } =
     useFormik({
@@ -25,9 +20,6 @@ const Notes = () => {
         setShow(false);
         console.log(values);
         document.body.removeAttribute("style");
-        dispatch(
-          addNote(values.title, values.description, values.category, token)
-        );
         action.resetForm();
       },
     });

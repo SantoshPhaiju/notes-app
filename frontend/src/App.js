@@ -8,7 +8,6 @@ import Register from "./components/Register";
 import Profile from "./components/Profile";
 import ForgetPassword from "./components/ForgetPassword";
 import ResetPassword from "./components/ResetPassword";
-import Practise1 from "./components/Practise/Practise1";
 
 const App = () => {
   return (
@@ -24,7 +23,6 @@ const App = () => {
           <Route exact path="/profile" element={<Profile />}></Route>
           <Route exact path="/forgetpassword" element={<ForgetPassword />}></Route>
           <Route exact path="/resetpassword/:resetToken" element={<ResetPassword />}></Route>
-          <Route exact path="/practise" element={<Practise1 />}></Route>
         </Routes>
         </div>
         <Footer />

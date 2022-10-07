@@ -1,32 +1,20 @@
-import React, { useEffect } from "react";
+import React, { } from "react";
 import { useFormik } from "formik";
 import { loginSchema } from "../schemas";
-import { useDispatch, useSelector } from "react-redux";
-import { login } from "../redux/action-creators";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Login = () => {
-  const userLogin = useSelector((state) => state.login);
-  const { data } = userLogin;
-  useEffect(() => {
-    if (localStorage.getItem("token")) {
-      navigate("/");
-      console.log(data);
-    }
-  });
+
   const credentials = {
     email: "",
     password: "",
   };
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { handleBlur, handleSubmit, handleChange, errors, values, touched } =
     useFormik({
       initialValues: credentials,
       validationSchema: loginSchema,
       onSubmit: (values, action) => {
         console.log(values);
-        dispatch(login(values.email, values.password));
         action.resetForm();
       },
     });

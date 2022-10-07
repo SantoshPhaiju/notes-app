@@ -8,16 +8,9 @@ import { TbLogout } from "react-icons/tb";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { ImCross } from "react-icons/im";
 import { AnimatePresence, motion } from "framer-motion";
-import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../redux/action-creators";
 
 const Header = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const logoutHandler = () => {
-    dispatch(logout());
-    navigate("/login");
-  };
   const dropRef2 = useRef();
   const [show, setShow] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
@@ -124,7 +117,7 @@ const Header = () => {
                     </Link>
                     <button
                       className="hover:bg-slate-200 py-2 px-6 w-[100%] rounded-md"
-                      onClick={logoutHandler}
+                      
                     >
                       <TbLogout className="inline-block mr-2 text-xl" /> Logout
                     </button>

@@ -3,9 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { signupSchema } from "../schemas";
 import { FcAddImage } from "react-icons/fc";
-import { useDispatch, useSelector } from "react-redux";
-import { register } from "../redux/action-creators";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const Register = () => {
@@ -16,26 +14,6 @@ const Register = () => {
       navigate("/");
     }
   });
-
-  const dispatch = useDispatch();
-  const userRegister = useSelector((state) => state.userRegister);
-  const { data, success, errorMsg } = userRegister;
-  useEffect(() => {
-    if (success === false && data !== undefined) {
-      console.log(errorMsg);
-    } else if (success === true) {
-      toast.success("Successfully registered. Now you can continue with login", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [success]);
 
   const credentials = {
     email: "",
@@ -64,7 +42,6 @@ const Register = () => {
       if (values.picture) {
         formdata.append("picture", values.picture, values.picture.name);
       }
-      dispatch(register(formdata));
       action.resetForm();
     },
   });
@@ -97,12 +74,7 @@ const Register = () => {
         pauseOnHover
       />
       <div className="w-full max-w-xs m-auto mt-20">
-        <p
-          className={`${errorMsg} !== ${null} ? 'block': 'hidden' text-red-700 text-center `}
-          aria-live="assertive"
-        >
-          {errorMsg}
-        </p>
+        
 
         <form
           onSubmit={handleSubmit}

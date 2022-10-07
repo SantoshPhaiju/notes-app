@@ -1,14 +1,9 @@
 import { useFormik } from "formik";
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Link, useParams } from "react-router-dom";
-import { resetpassword } from "../redux/action-creators";
+import { useParams } from "react-router-dom";
 import { resetPasswordSchema } from "../schemas";
 
 const ResetPassword = () => {
-  const userresetpassword = useSelector((state) => state.resetPassword);
-  const { data } = userresetpassword;
-  const dispatch = useDispatch();
   const resetToken = useParams();
   const { handleBlur, handleSubmit, handleChange, errors, values, touched } =
     useFormik({
@@ -16,7 +11,6 @@ const ResetPassword = () => {
       validationSchema: resetPasswordSchema,
       onSubmit: (values, action) => {
         console.log(values, resetToken);
-        dispatch(resetpassword(values.password, resetToken.resetToken));
         action.resetForm();
       },
     });
@@ -85,17 +79,7 @@ const ResetPassword = () => {
         </div>
 
         <div className="mb-4">
-          {data && (
-            <p className="text-center text-white p-2 bg-green-700">
-              {data}{" "}
-              <Link
-                to="/login"
-                className="text-blue-400 hover:underline font-sans"
-              >
-                Login
-              </Link>
-            </p>
-          )}
+          
         </div>
       </form>
     </div>
