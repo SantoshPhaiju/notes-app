@@ -1,20 +1,30 @@
-import React, { } from "react";
+import React, { useEffect } from "react";
 import { useFormik } from "formik";
 import { loginSchema } from "../schemas";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import {useDispatch} from 'react-redux';
+import { userLogin } from "../features/user/userSlice";
 
 const Login = () => {
-
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  useEffect(() =>{
+    if(localStorage.getItem('token')){
+      navigate("/")
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  })
   const credentials = {
     email: "",
     password: "",
   };
   const { handleBlur, handleSubmit, handleChange, errors, values, touched } =
-    useFormik({
-      initialValues: credentials,
-      validationSchema: loginSchema,
-      onSubmit: (values, action) => {
-        console.log(values);
+  useFormik({
+    initialValues: credentials,
+    validationSchema: loginSchema,
+    onSubmit: (values, action) => {
+        const {email, password} = values;
+        dispatch(userLogin({email: email, password: password})).unwrap();
         action.resetForm();
       },
     });

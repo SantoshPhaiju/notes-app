@@ -65,9 +65,11 @@ const loginUser = asyncHandler(async (req, res) => {
     });
   }
   const user = await User.findOne({ email });
+  console.log(user);
   if (user && (await user.matchPassword(password))) {
-    const token = await generateToken(user._id);
+    const token = generateToken(user._id);
     res.json({ success: true, msg: "Successfully loggedin", token: token });
+    console.log(token);
   } else {
     res.json({
       success: false,
