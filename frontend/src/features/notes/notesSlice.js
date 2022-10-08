@@ -2,16 +2,17 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 export const fetchNotes = createAsyncThunk("notes/fetchNotes", async () => {
-  const response = await axios.get(
-    "http://localhost:8000/api/notes/fetchallnotes",
-    {
-      headers: {
-        "auth-token":
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMTA1MmY1NzlhMTljZDRmY2Q5MjgzNCIsImlhdCI6MTY2NTEyMTM4OSwiZXhwIjoxNjY3NzEzMzg5fQ.FX5lS3uD0B9eQ5nlTIXU6fUld6KGzWWaYz--z9kdPfo",
-      },
-    }
-  );
-  return response.data.data;
+  if (localStorage.getItem("token")) {
+    const response = await axios.get(
+      "http://localhost:8000/api/notes/fetchallnotes",
+      {
+        headers: {
+          "auth-token": JSON.parse(localStorage.getItem("token")),
+        },
+      }
+    );
+    return response.data.data;
+  }
 });
 
 const initialState = {
@@ -28,17 +29,21 @@ const notesSlice = createSlice({
     builder
       .addCase(fetchNotes.pending, (state, action) => {
         state.status = "loading";
+        state.notes = [];
       })
       .addCase(fetchNotes.fulfilled, (state, action) => {
         state.status = "succeded";
-        const loadedNotes = action.payload.map((note) => {
-          return note;
-        });
-        state.notes = state.notes.concat(loadedNotes);
+        if(localStorage.getItem('token')){
+          const loadedNotes = action.payload.map((note) => {
+            return note;
+          });
+          state.notes = state.notes.concat(loadedNotes);
+        }else{
+          state.notes = [];
+        }
       })
       .addCase(fetchNotes.rejected, (state, action) => {
         state.status = "failed";
-        state.error = state.error.message;
       });
   },
 });

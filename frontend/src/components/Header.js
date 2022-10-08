@@ -33,6 +33,11 @@ const Header = () => {
 
     return () => document.body.removeEventListener("click", closeDropdown);
   });
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
   return (
     <>
       <header className="text-gray-600 body-font font-mono bg-slate-100">
@@ -117,7 +122,7 @@ const Header = () => {
                     </Link>
                     <button
                       className="hover:bg-slate-200 py-2 px-6 w-[100%] rounded-md"
-                      
+                      onClick={handleLogout}
                     >
                       <TbLogout className="inline-block mr-2 text-xl" /> Logout
                     </button>

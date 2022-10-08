@@ -9,7 +9,7 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   useEffect(() =>{
-    if(localStorage.getItem('token')){
+    if(JSON.parse(localStorage.getItem('token'))){
       navigate("/")
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
