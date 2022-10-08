@@ -8,12 +8,15 @@ import { TbLogout } from "react-icons/tb";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { ImCross } from "react-icons/im";
 import { AnimatePresence, motion } from "framer-motion";
+import { useDispatch } from "react-redux";
+import { logout } from "../features/notes/notesSlice";
 
 const Header = () => {
   const navigate = useNavigate();
   const dropRef2 = useRef();
   const [show, setShow] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
+  const dispatch = useDispatch();
   // eslint-disable-next-line
 
   const showResMenu = () => {
@@ -35,7 +38,7 @@ const Header = () => {
   });
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    dispatch(logout());
     navigate("/login");
   };
   return (

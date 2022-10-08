@@ -24,7 +24,12 @@ const initialState = {
 const notesSlice = createSlice({
   name: "notes",
   initialState,
-  reducers: {},
+  reducers: {
+    logout: (state) => {
+      localStorage.removeItem("token");
+      state.notes = [];
+    },
+  },
   extraReducers(builder) {
     builder
       .addCase(fetchNotes.pending, (state, action) => {
@@ -47,5 +52,7 @@ const notesSlice = createSlice({
       });
   },
 });
+
+export const {logout} = notesSlice.actions;
 
 export default notesSlice.reducer;

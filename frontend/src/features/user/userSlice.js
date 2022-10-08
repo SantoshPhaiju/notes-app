@@ -1,17 +1,17 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-export const userLogin = createAsyncThunk(
-  "user/userLogin",
-  async (data) => {
-    try {
-        const response = await axios.post("http://localhost:8000/api/auth/login", data);
-        return response.data;
-    } catch (error) {
-        return error.message;
-    }
+export const userLogin = createAsyncThunk("user/userLogin", async (data) => {
+  try {
+    const response = await axios.post(
+      "http://localhost:8000/api/auth/login",
+      data
+    );
+    return response.data;
+  } catch (error) {
+    return error.message;
   }
-);
+});
 
 const initialState = {
   user: [],
@@ -32,7 +32,9 @@ const userSlice = createSlice({
         state.status = "succeded";
         state.user = action.payload;
         const token = action.payload.token;
-        localStorage.setItem("token", JSON.stringify(token))
+        if(token !== undefined){
+          localStorage.setItem("token", JSON.stringify(token));
+        }
       })
       .addCase(userLogin.rejected, (state, action) => {
         state.status = "failed";

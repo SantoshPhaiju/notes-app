@@ -8,12 +8,16 @@ import { userLogin } from "../features/user/userSlice";
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const token = localStorage.getItem('token')
   useEffect(() =>{
-    if(JSON.parse(localStorage.getItem('token'))){
-      navigate("/")
+    if(!token){
+      navigate("/login")
+    }else{
+      navigate("/");
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  })
+  },[token, navigate])
+
   const credentials = {
     email: "",
     password: "",
