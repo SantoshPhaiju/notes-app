@@ -15,11 +15,12 @@ const Home = () => {
       navigate("/login");
     } else {
       dispatch(fetchNotes());
+      console.log(notes);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  
-  const userData = JSON.parse(localStorage.getItem("userData"))
+
+  const userData = JSON.parse(localStorage.getItem("userData"));
   const capitalize = (str) => {
     return str.charAt(0).toUpperCase() + str.slice(1);
   };
@@ -32,9 +33,13 @@ const Home = () => {
       </h1>
       <hr className="mb-6" />
       <Notes />
-      {notes.map((note) => {
-        return <NotesItem key={note._id} data={note} />;
-      })}
+      {notes.length !== 0 ? (
+        notes.map((note) => {
+          return <NotesItem key={note._id} data={note} />;
+        })
+      ) : (
+        <p className="text-black text-center my-4">No Notes to Display here</p>
+      )}
     </div>
   );
 };
