@@ -60,7 +60,7 @@ const Register = () => {
   });
 
   const onSelectFile = (e) => {
-    console.log(e.currentTarget.files[0]);
+    // console.log(e.currentTarget.files[0]);
     const selectedFile = e.target.files;
     const selectedFileArray = Array.from(selectedFile);
 
@@ -68,7 +68,7 @@ const Register = () => {
       return URL.createObjectURL(file);
     });
 
-    console.log(imageArray);
+    // console.log(imageArray);
     setSelectedImage(imageArray);
     setFieldValue("picture", e.target.files[0]);
   };
