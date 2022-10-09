@@ -27,6 +27,7 @@ const notesSlice = createSlice({
   reducers: {
     logout: (state) => {
       localStorage.removeItem("token");
+      localStorage.removeItem("userData");
       state.notes = [];
     },
   },
@@ -38,12 +39,12 @@ const notesSlice = createSlice({
       })
       .addCase(fetchNotes.fulfilled, (state, action) => {
         state.status = "succeded";
-        if(localStorage.getItem('token')){
+        if (localStorage.getItem("token")) {
           const loadedNotes = action.payload.map((note) => {
             return note;
           });
           state.notes = state.notes.concat(loadedNotes);
-        }else{
+        } else {
           state.notes = [];
         }
       })
@@ -53,6 +54,6 @@ const notesSlice = createSlice({
   },
 });
 
-export const {logout} = notesSlice.actions;
+export const { logout } = notesSlice.actions;
 
 export default notesSlice.reducer;

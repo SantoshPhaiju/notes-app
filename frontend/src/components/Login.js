@@ -2,20 +2,26 @@ import React, { useEffect } from "react";
 import { useFormik } from "formik";
 import { loginSchema } from "../schemas";
 import { Link, useNavigate } from "react-router-dom";
-import {useDispatch} from 'react-redux';
-import { userLogin } from "../features/user/userSlice";
+import {useDispatch, useSelector} from 'react-redux';
+import { selectUser, userLogin } from "../features/user/userSlice";
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const user = useSelector(selectUser);
+
   const token = localStorage.getItem('token')
   useEffect(() =>{
-    if(!token){
+    if(token === null){
       navigate("/login")
     }else{
       navigate("/");
     }
+    if(user.token !== undefined){
+      navigate("/");
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[token, navigate])
 
   const credentials = {

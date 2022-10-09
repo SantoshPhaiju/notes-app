@@ -13,10 +13,23 @@ export const userLogin = createAsyncThunk("user/userLogin", async (data) => {
   }
 });
 
+export const getUserData = createAsyncThunk("user/getUserData", async () =>{
+  try {
+    const response = await axios.get("http://localhost:8000/api/auth/getuserdata", {
+      headers: {
+        "auth-token": JSON.parse(localStorage.getItem("token"))
+      }
+    });
+    return response.data;
+  } catch (error) {
+    return error.message;
+  }
+})
+
 const initialState = {
   user: [],
   status: "idle",
-  error: null,
+  error: null
 };
 
 const userSlice = createSlice({
@@ -38,7 +51,17 @@ const userSlice = createSlice({
       })
       .addCase(userLogin.rejected, (state, action) => {
         state.status = "failed";
-      });
+      })
+      .addCase(getUserData.pending, (state, action) => {
+        state.status = "loading";
+      })
+      .addCase(getUserData.fulfilled, (state, action) => {
+        state.status = "succeded";
+          localStorage.setItem("userData", JSON.stringify(action.payload));
+      })
+      .addCase(getUserData.rejected, (state, action) => {
+        state.status = "failed";
+      })
   },
 });
 
