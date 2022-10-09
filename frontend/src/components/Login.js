@@ -3,12 +3,13 @@ import { useFormik } from "formik";
 import { loginSchema } from "../schemas";
 import { Link, useNavigate } from "react-router-dom";
 import {useDispatch, useSelector } from 'react-redux';
-import { getUserData, selectUser, userLogin } from "../features/user/userSlice";
+import { getRegistrationMessage, getUserData, selectUser, userLogin } from "../features/user/userSlice";
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
+  const registrationMsg = useSelector(getRegistrationMessage);
 
   const token = localStorage.getItem('token')
   useEffect(() =>{
@@ -41,6 +42,11 @@ const Login = () => {
       <div className="w-full max-w-xs m-auto mt-20">
         {user.error && <p className="text-red-700 text-center font-mono">
           {user.error}
+        </p>}
+        {registrationMsg.success === true ? <p className="text-black text-center font-mono">
+          {registrationMsg.data}
+        </p>: <p className="text-red-700 text-center font-mono">
+          {registrationMsg.errors}
         </p>}
         <form
           onSubmit={handleSubmit}

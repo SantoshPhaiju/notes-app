@@ -29,11 +29,24 @@ export const getUserData = createAsyncThunk("user/getUserData", async () => {
   }
 });
 
+export const registerUser = createAsyncThunk("user/registerUser", async (data) =>{
+  try {
+    const response = await axios.post(
+      "http://localhost:8000/api/auth/register",
+      data
+    );
+    return response.data;
+  } catch (error) {
+    
+  }
+})
+
 const initialState = {
   user: [],
   status: "idle",
   error: null,
   userData: [],
+  registrationMsg: []
 };
 
 const userSlice = createSlice({
@@ -66,11 +79,22 @@ const userSlice = createSlice({
       })
       .addCase(getUserData.rejected, (state, action) => {
         state.status = "failed";
-      });
+      })
+      .addCase(registerUser.pending, (state, action) => {
+        state.status = "loading";
+      })
+      .addCase(registerUser.fulfilled, (state, action) => {
+        state.status = "succeded";
+        state.registrationMsg = action.payload;
+      })
+      .addCase(registerUser.rejected, (state, action) => {
+        state.status = "failed";
+      })
   },
 });
 
 export const selectUser = (state) => state.user.user;
 export const selectUserData = (state) => state.user.userData;
+export const getRegistrationMessage = (state) => state.user.registrationMsg;
 
 export default userSlice.reducer;

@@ -5,15 +5,21 @@ import { signupSchema } from "../schemas";
 import { FcAddImage } from "react-icons/fc";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useDispatch } from "react-redux";
+import { registerUser } from "../features/user/userSlice";
 
 const Register = () => {
   const [selectedImage, setSelectedImage] = useState([]);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+
   useEffect(() => {
     if (localStorage.getItem("token")) {
       navigate("/");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   });
+
 
   const credentials = {
     email: "",
@@ -42,7 +48,10 @@ const Register = () => {
       if (values.picture) {
         formdata.append("picture", values.picture, values.picture.name);
       }
+      dispatch(registerUser(formdata))
       action.resetForm();
+      setSelectedImage([]);
+      navigate("/login")
     },
   });
 
