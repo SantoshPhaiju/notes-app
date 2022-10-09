@@ -4,9 +4,7 @@ import { useNavigate } from "react-router-dom";
 const Profile = () => {
   const navigate = useNavigate();
   useEffect(() => {
-    if(localStorage.getItem('token')){
-      console.log("done");
-    }else{
+    if(!localStorage.getItem('token')){
       navigate("/login");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

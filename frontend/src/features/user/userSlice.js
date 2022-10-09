@@ -13,23 +13,27 @@ export const userLogin = createAsyncThunk("user/userLogin", async (data) => {
   }
 });
 
-export const getUserData = createAsyncThunk("user/getUserData", async () =>{
+export const getUserData = createAsyncThunk("user/getUserData", async () => {
   try {
-    const response = await axios.get("http://localhost:8000/api/auth/getuserdata", {
-      headers: {
-        "auth-token": JSON.parse(localStorage.getItem("token"))
+    const response = await axios.get(
+      "http://localhost:8000/api/auth/getuserdata",
+      {
+        headers: {
+          "auth-token": JSON.parse(localStorage.getItem("token")),
+        },
       }
-    });
+    );
     return response.data;
   } catch (error) {
     return error.message;
   }
-})
+});
 
 const initialState = {
   user: [],
   status: "idle",
-  error: null
+  error: null,
+  userData: [],
 };
 
 const userSlice = createSlice({
@@ -45,7 +49,7 @@ const userSlice = createSlice({
         state.status = "succeded";
         state.user = action.payload;
         const token = action.payload.token;
-        if(token !== undefined){
+        if (token !== undefined) {
           localStorage.setItem("token", JSON.stringify(token));
         }
       })
@@ -57,14 +61,16 @@ const userSlice = createSlice({
       })
       .addCase(getUserData.fulfilled, (state, action) => {
         state.status = "succeded";
-          localStorage.setItem("userData", JSON.stringify(action.payload));
+        state.userData = action.payload;
+        localStorage.setItem("userData", JSON.stringify(action.payload));
       })
       .addCase(getUserData.rejected, (state, action) => {
         state.status = "failed";
-      })
+      });
   },
 });
 
 export const selectUser = (state) => state.user.user;
+export const selectUserData = (state) => state.user.userData;
 
 export default userSlice.reducer;
