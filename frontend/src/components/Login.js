@@ -1,53 +1,62 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useFormik } from "formik";
 import { loginSchema } from "../schemas";
 import { Link, useNavigate } from "react-router-dom";
-import {useDispatch, useSelector } from 'react-redux';
-import { getRegistrationMessage, getUserData, selectUser, userLogin } from "../features/user/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { getUserData, selectUser, userLogin } from "../features/user/userSlice";
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
-  const registrationMsg = useSelector(getRegistrationMessage);
+  const errorRef = useRef();
 
-  const token = localStorage.getItem('token')
-  useEffect(() =>{
-    if(token !== null && user.token !== undefined){
-      navigate("/")
+  const token = localStorage.getItem("token");
+  useEffect(() => {
+    if (token !== null && user.token !== undefined) {
+      navigate("/");
       dispatch(getUserData());
-    }else{
+    } else {
       navigate("/login");
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[token, navigate])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token, navigate]);
+
+  useEffect(() =>{
+    if(user.error){
+      hide();
+    }
+  }, [user.error])
 
   const credentials = {
     email: "",
     password: "",
   };
   const { handleBlur, handleSubmit, handleChange, errors, values, touched } =
-  useFormik({
-    initialValues: credentials,
-    validationSchema: loginSchema,
-    onSubmit: (values, action) => {
-        const {email, password} = values;
-        dispatch(userLogin({email: email, password: password})).unwrap();
+    useFormik({
+      initialValues: credentials,
+      validationSchema: loginSchema,
+      onSubmit: (values, action) => {
+        const { email, password } = values;
+        dispatch(userLogin({ email: email, password: password })).unwrap();
         action.resetForm();
       },
     });
 
+  const hide = () => {
+    setTimeout(() => {
+      errorRef.current.classList.add("hidden");
+    }, 3000);
+  };
+
   return (
     <>
       <div className="w-full max-w-xs m-auto mt-20">
-        {user.error && <p className="text-red-700 text-center font-mono">
-          {user.error}
-        </p>}
-        {registrationMsg.success === true ? <p className="text-black text-center font-mono">
-          {registrationMsg.data}
-        </p>: <p className="text-red-700 text-center font-mono">
-          {registrationMsg.errors}
-        </p>}
+        {user.error && (
+          <p className="text-red-700 text-center font-mono" ref={errorRef}>
+            {user.error}
+          </p>
+        )}
         <form
           onSubmit={handleSubmit}
           className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"

@@ -29,24 +29,27 @@ export const getUserData = createAsyncThunk("user/getUserData", async () => {
   }
 });
 
-export const registerUser = createAsyncThunk("user/registerUser", async (data) =>{
-  try {
-    const response = await axios.post(
-      "http://localhost:8000/api/auth/register",
-      data
-    );
-    return response.data;
-  } catch (error) {
-    
+export const registerUser = createAsyncThunk(
+  "user/registerUser",
+  async (data) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/api/auth/register",
+        data
+      );
+      return response.data;
+    } catch (error) {
+      return error.message;
+    }
   }
-})
+);
 
 const initialState = {
   user: [],
   status: "idle",
   error: null,
   userData: [],
-  registrationMsg: []
+  registrationMsg: [],
 };
 
 const userSlice = createSlice({
@@ -89,7 +92,7 @@ const userSlice = createSlice({
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.status = "failed";
-      })
+      });
   },
 });
 

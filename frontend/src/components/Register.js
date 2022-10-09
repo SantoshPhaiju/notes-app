@@ -1,24 +1,29 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { signupSchema } from "../schemas";
 import { FcAddImage } from "react-icons/fc";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useDispatch } from "react-redux";
-import { registerUser } from "../features/user/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { getRegistrationMessage, registerUser } from "../features/user/userSlice";
 
 const Register = () => {
   const [selectedImage, setSelectedImage] = useState([]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const registrationMsg = useSelector(getRegistrationMessage);
 
   useEffect(() => {
     if (localStorage.getItem("token")) {
       navigate("/");
     }
+    if(registrationMsg.success === true){
+      navigate("/login");
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   });
+  const errorRef = useRef();
 
 
   const credentials = {
@@ -51,7 +56,6 @@ const Register = () => {
       dispatch(registerUser(formdata))
       action.resetForm();
       setSelectedImage([]);
-      navigate("/login")
     },
   });
 
@@ -69,6 +73,18 @@ const Register = () => {
     setFieldValue("picture", e.target.files[0]);
   };
 
+  useEffect(() =>{
+    if(registrationMsg.success === false){
+      hide();
+    }
+  }, [registrationMsg.success])
+
+  const hide = () => {
+    setTimeout(() => {
+      errorRef.current.classList.add("hidden");
+    }, 3000);
+  };
+
   return (
     <div>
       <ToastContainer
@@ -84,7 +100,11 @@ const Register = () => {
       />
       <div className="w-full max-w-xs m-auto mt-20">
         
-
+      {registrationMsg.success === true && registrationMsg ?  <p className="text-black text-center font-mono">
+          {registrationMsg.data}
+        </p> : <p className="text-black text-center font-mono" ref={errorRef}>
+          {registrationMsg.error}
+        </p>}
         <form
           onSubmit={handleSubmit}
           className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"

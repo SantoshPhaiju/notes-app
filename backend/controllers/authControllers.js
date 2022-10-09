@@ -15,14 +15,14 @@ const registerUser = async (req, res) => {
   const { username, email, password } = req.body;
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array()[0].msg });
+    return res
+      .json({ success: false, error: errors.array()[0].msg });
   }
 
   const existsUser = await User.findOne({ email }).select("-password");
 
   if (existsUser) {
     res
-      .status(400)
       .send({ success: false, error: "Users already exists with this email" });
     // throw new Error("User already exists with this email");
   } else {
@@ -35,9 +35,14 @@ const registerUser = async (req, res) => {
         picture,
       });
       if (user) {
-        res.status(201).json({ success: true, data: "Successfully signed in" });
+        res
+          .status(201)
+          .json({
+            success: true,
+            data: "Successfully signed in. Now you can continue with login",
+          });
       } else {
-        res.status(400).json({ success: false, error: errors.array()[0].msg });
+        res.json({ success: false, error: errors.array()[0].msg });
       }
     } else {
       const user = await User.create({
@@ -46,9 +51,14 @@ const registerUser = async (req, res) => {
         password,
       });
       if (user) {
-        res.status(201).json({ success: true, data: "Successfully signed in" });
+        res
+          .status(201)
+          .json({
+            success: true,
+            data: "Successfully signed in. Now you can continue with login",
+          });
       } else {
-        res.status(400).json({ success: false, error: errors.array()[0].msg });
+        res.json({ success: false, error: errors.array()[0].msg });
       }
     }
   }
