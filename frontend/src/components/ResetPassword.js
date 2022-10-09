@@ -10,7 +10,7 @@ const ResetPassword = () => {
       initialValues: { password: "", cpassword: "" },
       validationSchema: resetPasswordSchema,
       onSubmit: (values, action) => {
-        console.log(values, resetToken);
+        // console.log(values, resetToken);
         action.resetForm();
       },
     });

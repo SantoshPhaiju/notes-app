@@ -18,7 +18,7 @@ const Notes = () => {
       validationSchema: addNoteSchema,
       onSubmit: (values, action) => {
         setShow(false);
-        console.log(values);
+        // console.log(values);
         document.body.removeAttribute("style");
         action.resetForm();
       },

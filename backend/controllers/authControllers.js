@@ -10,8 +10,8 @@ const path = require("path");
 // Register user route contorller
 
 const registerUser = async (req, res) => {
-  console.log(req.file);
-  console.log(req.body);
+  // console.log(req.file);
+  // console.log(req.body);
   const { username, email, password } = req.body;
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -75,11 +75,11 @@ const loginUser = asyncHandler(async (req, res) => {
     });
   }
   const user = await User.findOne({ email });
-  console.log(user);
+  // console.log(user);
   if (user && (await user.matchPassword(password))) {
     const token = generateToken(user._id);
     res.json({ success: true, msg: "Successfully loggedin", token: token });
-    console.log(token);
+    // console.log(token);
   } else {
     res.json({
       success: false,
@@ -177,10 +177,10 @@ const updateUserProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
     const { username, email } = req.body;
-    console.log(req.file);
+    // console.log(req.file);
     if (user) {
       const basename = path.basename(user.picture);
-      console.log(basename);
+      // console.log(basename);
       if (req.file) {
         fs.unlink(path.join(__dirname, `../src/uploads/${basename}`), (err) => {
           if (err) {

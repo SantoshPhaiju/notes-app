@@ -15,7 +15,6 @@ const Home = () => {
       navigate("/login");
     } else {
       dispatch(fetchNotes());
-      console.log(notes);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
