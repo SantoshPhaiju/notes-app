@@ -15,6 +15,39 @@ export const fetchNotes = createAsyncThunk("notes/fetchNotes", async () => {
   }
 });
 
+export const addNote = createAsyncThunk("notes/addNote", async (note) => {
+  if (localStorage.getItem("token")) {
+    const response = await axios.post(
+      "http://localhost:8000/api/notes/addnote",
+      note,
+      {
+        headers: {
+          "auth-token": JSON.parse(localStorage.getItem("token")),
+        },
+      }
+    );
+    return response.data;
+  }
+});
+
+export const deleteNote = createAsyncThunk("notes/deleteNote", async (id) => {
+  try {
+    if (localStorage.getItem("token")) {
+      const response = await axios.delete(
+        `http://localhost:8000/api/notes/deletenote/${id}`,
+        {
+          headers: {
+            "auth-token": JSON.parse(localStorage.getItem("token")),
+          },
+        }
+      );
+      return response.data;
+    }
+  } catch (error) {
+    return error.message;
+  }
+});
+
 const initialState = {
   notes: [],
   status: "idle",
@@ -50,7 +83,33 @@ const notesSlice = createSlice({
       })
       .addCase(fetchNotes.rejected, (state, action) => {
         state.status = "failed";
-      });
+      })
+      .addCase(addNote.pending, (state, action) =>{
+        state.status = "loading";
+      })
+      .addCase(addNote.fulfilled, (state, action) =>{
+        state.status = "succeded";
+        const newNote = action.payload.data;
+        state.notes = state.notes.concat(newNote);
+      })
+      .addCase(addNote.rejected, (state, action) => {
+        state.status = "failed";
+      })
+      .addCase(deleteNote.pending, (state, action) =>{
+        state.status = "loading";
+      })
+      .addCase(deleteNote.fulfilled, (state, action) =>{
+        state.status = "succeded";
+        const deletedNote = action.payload.note;
+        const newNotes = state.notes.filter((note) =>{
+          return note._id !== deletedNote._id;
+        })
+        state.notes = newNotes;
+      })
+      .addCase(deleteNote.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
   },
 });
 

@@ -1,12 +1,25 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useDispatch } from "react-redux";
+import { deleteNote } from "../features/notes/notesSlice";
 const NotesItem = (props) => {
   const [show, setShow] = useState(false);
+  const dispatch = useDispatch();
 
   const dbDate = props.data.createdAt;
   const date = new Date(dbDate);
   const createdAtDate = date.toLocaleDateString();
   const createdAtTime = date.toLocaleTimeString();
+
+  const handleDelete = () => {
+    // eslint-disable-next-line no-restricted-globals
+    if (confirm("Are you sure want to delete this note") === true) {
+      dispatch(deleteNote(props.data._id));
+      setShow(false);
+    } else {
+      setShow(false);
+    }
+  };
 
   return (
     <>
@@ -19,11 +32,20 @@ const NotesItem = (props) => {
             }}
           >
             <h2 className="text-lg">{props.data.title}</h2>
-            <div className="buttons flex space-x-5">
-              <button className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-1 px-6 rounded focus:outline-none focus:shadow-outline">
+            <div
+              className="buttons flex space-x-5"
+              onClick={(e) => setShow(false)}
+            >
+              <button
+                className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-1 px-6 rounded focus:outline-none focus:shadow-outline"
+                onClick={(e) => setShow(false)}
+              >
                 Edit
               </button>
-              <button className="bg-red-500 hover:bg-red-700 text-white font-semibold py-1 px-6 rounded focus:outline-none focus:shadow-outline">
+              <button
+                className="bg-red-500 hover:bg-red-700 text-white font-semibold py-1 px-6 rounded focus:outline-none focus:shadow-outline"
+                onClick={handleDelete}
+              >
                 Delete
               </button>
             </div>

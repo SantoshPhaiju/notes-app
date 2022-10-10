@@ -3,9 +3,13 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useFormik } from "formik";
 import { addNoteSchema } from "../schemas";
 import { } from "react-router-dom";
+import {useDispatch} from "react-redux"
+import { addNote } from "../features/notes/notesSlice";
+
+
 const Notes = () => {
   const [show, setShow] = useState(false);
-
+  const dispatch = useDispatch();
   const noteData = {
     title: "",
     description: "",
@@ -20,6 +24,7 @@ const Notes = () => {
         setShow(false);
         // console.log(values);
         document.body.removeAttribute("style");
+        dispatch(addNote(values));
         action.resetForm();
       },
     });
