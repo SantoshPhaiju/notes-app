@@ -76,7 +76,6 @@ const updateNote = async (req, res) => {
     if (title) {
       if (!validator.isLength(title, { min: 3 })) {
         return res
-          .status(400)
           .send({ error: "Title must be at least 3 character long" });
       } else {
         newNote.title = title;
@@ -85,7 +84,6 @@ const updateNote = async (req, res) => {
     if (description) {
       if (!validator.isLength(description, { min: 6 })) {
         return res
-          .status(400)
           .send({ error: "description must be at least 6 character long" });
       } else {
         newNote.description = description;

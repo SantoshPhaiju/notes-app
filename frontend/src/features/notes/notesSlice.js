@@ -48,6 +48,26 @@ export const deleteNote = createAsyncThunk("notes/deleteNote", async (id) => {
   }
 });
 
+export const editNote = createAsyncThunk("notes/editNote", async (newNote) => {
+  try {
+    const { id } = newNote;
+    if (localStorage.getItem("token")) {
+      const response = await axios.put(
+        `http://localhost:8000/api/notes/updatenote/${id}`,
+        newNote,
+        {
+          headers: {
+            "auth-token": JSON.parse(localStorage.getItem("token")),
+          },
+        }
+      );
+      return response.data;
+    }
+  } catch (error) {
+    return error.message;
+  }
+});
+
 const initialState = {
   notes: [],
   status: "idle",
@@ -84,10 +104,10 @@ const notesSlice = createSlice({
       .addCase(fetchNotes.rejected, (state, action) => {
         state.status = "failed";
       })
-      .addCase(addNote.pending, (state, action) =>{
+      .addCase(addNote.pending, (state, action) => {
         state.status = "loading";
       })
-      .addCase(addNote.fulfilled, (state, action) =>{
+      .addCase(addNote.fulfilled, (state, action) => {
         state.status = "succeded";
         const newNote = action.payload.data;
         state.notes = state.notes.concat(newNote);
@@ -95,21 +115,40 @@ const notesSlice = createSlice({
       .addCase(addNote.rejected, (state, action) => {
         state.status = "failed";
       })
-      .addCase(deleteNote.pending, (state, action) =>{
+      .addCase(deleteNote.pending, (state, action) => {
         state.status = "loading";
       })
-      .addCase(deleteNote.fulfilled, (state, action) =>{
+      .addCase(deleteNote.fulfilled, (state, action) => {
         state.status = "succeded";
         const deletedNote = action.payload.note;
-        const newNotes = state.notes.filter((note) =>{
+        const newNotes = state.notes.filter((note) => {
           return note._id !== deletedNote._id;
-        })
+        });
         state.notes = newNotes;
       })
       .addCase(deleteNote.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       })
+      .addCase(editNote.pending, (state, action) => {
+        state.status = "loading";
+      })
+      .addCase(editNote.fulfilled, (state, action) => {
+        state.status = "succeded";
+        // if(!action.payload?._id){
+        //   console.log(action.payload);
+        //   console.log("Note updation failed");
+        //   return;
+        // }
+        const {_id} = action.payload.updatedNote;
+        const notes = state.notes.filter((note) => note._id !== _id);
+        state.notes = [...notes, action.payload.updatedNote];
+        // console.log(action.payload.updatedNote);
+      })
+      .addCase(editNote.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      });
   },
 });
 
