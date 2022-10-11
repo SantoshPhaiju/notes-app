@@ -37,7 +37,7 @@ const Home = () => {
         return <NotesItem key={note._id} data={note} />;
       })
     }else{
-      <p className="text-black text-center my-4">No Notes to Display here</p>
+      content = <p className="text-black text-3xl text-center my-4">No Notes to Display here</p>
     }
   }
 

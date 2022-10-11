@@ -135,12 +135,7 @@ const notesSlice = createSlice({
       })
       .addCase(editNote.fulfilled, (state, action) => {
         state.status = "succeded";
-        // if(!action.payload?._id){
-        //   console.log(action.payload);
-        //   console.log("Note updation failed");
-        //   return;
-        // }
-        const {_id} = action.payload.updatedNote;
+        const { _id } = action.payload.updatedNote;
         const notes = state.notes.filter((note) => note._id !== _id);
         state.notes = [...notes, action.payload.updatedNote];
         // console.log(action.payload.updatedNote);
