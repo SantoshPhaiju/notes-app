@@ -1,15 +1,22 @@
-import React, {  } from "react";
+import React, { useRef } from "react";
 import { useFormik } from "formik";
 import { emailSchema } from "../schemas";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { forgetPassword, getFrogetPasswordMessage } from "../features/user/userSlice";
+
 
 const ForgetPassword = () => {
+  const dispatch = useDispatch()
+  const forgetPswdMsg = useSelector(getFrogetPasswordMessage);
+  const msgRef = useRef();
   const { handleBlur, handleSubmit, handleChange, errors, values, touched } =
   useFormik({
       initialValues: { email: "" },
       validationSchema: emailSchema,
       onSubmit: (values, action) => {
         action.resetForm();
+        dispatch(forgetPassword(values));
       },
     });
 
@@ -17,6 +24,7 @@ const ForgetPassword = () => {
   return (
     <div className="w-96 mx-auto mt-40">
       <h1 className="text-center text-2xl">Forget password</h1>
+      {forgetPswdMsg.length !== 0 && <p ref={msgRef} className="text-center bg-green-700 text-white py-1 px-2 my-3 rounded-sm">{forgetPswdMsg.msg}</p>}
       <form
         onSubmit={handleSubmit}
         className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"

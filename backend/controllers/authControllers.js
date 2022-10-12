@@ -98,7 +98,6 @@ const forgetpassword = async (req, res) => {
     const user = await User.findOne({ email });
     if (!user) {
       res
-        .status(400)
         .send({ msg: "User doesn't exists with this email", success: false });
     } else {
       const resetToken = await user.getResetPasswordToken();

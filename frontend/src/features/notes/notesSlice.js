@@ -68,6 +68,9 @@ export const editNote = createAsyncThunk("notes/editNote", async (newNote) => {
   }
 });
 
+
+
+
 const initialState = {
   notes: [],
   status: "idle",

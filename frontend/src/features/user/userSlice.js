@@ -44,12 +44,22 @@ export const registerUser = createAsyncThunk(
   }
 );
 
+export const forgetPassword = createAsyncThunk("user/forgetPassword", async (email) =>{
+  try {
+    const response = await axios.post("http://localhost:8000/api/auth/forgetpassword", email);
+    return response.data;
+  } catch (error) {
+    return error.message;
+  }
+})
+
 const initialState = {
   user: [],
   status: "idle",
   error: null,
   userData: [],
   registrationMsg: [],
+  forgetPasswordMsg: []
 };
 
 const userSlice = createSlice({
@@ -92,6 +102,17 @@ const userSlice = createSlice({
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.status = "failed";
+      })
+      .addCase(forgetPassword.pending, (state, action) => {
+        state.status = "loading";
+      })
+      .addCase(forgetPassword.fulfilled, (state, action) => {
+        state.status = "succeded";
+        state.forgetPasswordMsg = action.payload;
+      })
+      .addCase(forgetPassword.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
       });
   },
 });
@@ -99,5 +120,6 @@ const userSlice = createSlice({
 export const selectUser = (state) => state.user.user;
 export const selectUserData = (state) => state.user.userData;
 export const getRegistrationMessage = (state) => state.user.registrationMsg;
+export const getFrogetPasswordMessage = (state) => state.user.forgetPasswordMsg;
 
 export default userSlice.reducer;
