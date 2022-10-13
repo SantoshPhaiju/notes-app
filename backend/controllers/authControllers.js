@@ -153,7 +153,7 @@ const resetpassword = async (req, res) => {
     });
 
     if (!user) {
-      res.status(400).send({ msg: "Reset password token expired" });
+      return res.send({ msg: "Reset password token expired" });
     }
     user.password = password;
     user.resetPasswordExpire = undefined;

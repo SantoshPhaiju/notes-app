@@ -1,16 +1,30 @@
 import { useFormik } from "formik";
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import {
+  getResetPasswordMessage,
+  resetPassword,
+} from "../features/user/userSlice";
 import { resetPasswordSchema } from "../schemas";
 
 const ResetPassword = () => {
   const resetToken = useParams();
+  const dispatch = useDispatch();
+  const resetPasswordMsg = useSelector(getResetPasswordMessage);
   const { handleBlur, handleSubmit, handleChange, errors, values, touched } =
     useFormik({
       initialValues: { password: "", cpassword: "" },
       validationSchema: resetPasswordSchema,
       onSubmit: (values, action) => {
-        // console.log(values, resetToken);
+        // console.log(values);
+        // console.log(resetToken);
+        dispatch(
+          resetPassword({
+            password: values.password,
+            resetToken: resetToken.resetToken,
+          })
+        ).unwrap();
         action.resetForm();
       },
     });
@@ -18,6 +32,11 @@ const ResetPassword = () => {
   return (
     <div className="w-full max-w-xs m-auto mt-20">
       <h1 className="text-center mb-4 text-2xl">Reset Your password here</h1>
+      {resetPasswordMsg.length !== 0 && (
+        <p className="text-center bg-green-700 text-white py-1 px-2 my-3 rounded-sm">
+          {resetPasswordMsg.msg}
+        </p>
+      )}
       <form
         onSubmit={handleSubmit}
         className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
@@ -78,9 +97,7 @@ const ResetPassword = () => {
           </button>
         </div>
 
-        <div className="mb-4">
-          
-        </div>
+        <div className="mb-4"></div>
       </form>
     </div>
   );

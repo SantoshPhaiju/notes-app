@@ -44,14 +44,38 @@ export const registerUser = createAsyncThunk(
   }
 );
 
-export const forgetPassword = createAsyncThunk("user/forgetPassword", async (email) =>{
-  try {
-    const response = await axios.post("http://localhost:8000/api/auth/forgetpassword", email);
-    return response.data;
-  } catch (error) {
-    return error.message;
+export const forgetPassword = createAsyncThunk(
+  "user/forgetPassword",
+  async (email) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/api/auth/forgetpassword",
+        email
+      );
+      return response.data;
+    } catch (error) {
+      return error.message;
+    }
   }
-})
+);
+
+export const resetPassword = createAsyncThunk(
+  "user/resetPassword",
+  async (data) => {
+    const { resetToken } = data;
+    try {
+      // console.log(data);
+      // console.log(resetToken);
+      const response = await axios.put(
+        `http://localhost:8000/api/auth/resetpassword/${resetToken}`,
+        data
+      );
+      return response.data;
+    } catch (error) {
+      return error.message;
+    }
+  }
+);
 
 const initialState = {
   user: [],
@@ -59,7 +83,8 @@ const initialState = {
   error: null,
   userData: [],
   registrationMsg: [],
-  forgetPasswordMsg: []
+  forgetPasswordMsg: [],
+  resetPasswordMsg: [],
 };
 
 const userSlice = createSlice({
@@ -113,6 +138,17 @@ const userSlice = createSlice({
       .addCase(forgetPassword.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
+      })
+      .addCase(resetPassword.pending, (state, action) => {
+        state.status = "loading";
+      })
+      .addCase(resetPassword.fulfilled, (state, action) => {
+        state.status = "succeded";
+        state.resetPasswordMsg = action.payload;
+      })
+      .addCase(resetPassword.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
       });
   },
 });
@@ -121,5 +157,6 @@ export const selectUser = (state) => state.user.user;
 export const selectUserData = (state) => state.user.userData;
 export const getRegistrationMessage = (state) => state.user.registrationMsg;
 export const getFrogetPasswordMessage = (state) => state.user.forgetPasswordMsg;
+export const getResetPasswordMessage = (state) => state.user.resetPasswordMsg;
 
 export default userSlice.reducer;
