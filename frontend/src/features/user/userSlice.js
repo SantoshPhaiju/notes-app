@@ -77,6 +77,26 @@ export const resetPassword = createAsyncThunk(
   }
 );
 
+export const updateProfile = createAsyncThunk(
+  "user/updateProfile",
+  async (data) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/api/auth/profile",
+        data,
+        {
+          headers: {
+            "auth-token": JSON.parse(localStorage.getItem("token"))
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      return error.message;
+    }
+  }
+);
+
 const initialState = {
   user: [],
   status: "idle",
@@ -112,8 +132,8 @@ const userSlice = createSlice({
       })
       .addCase(getUserData.fulfilled, (state, action) => {
         state.status = "succeded";
-        state.userData = action.payload;
-        localStorage.setItem("userData", JSON.stringify(action.payload));
+        state.userData = action.payload.data;
+        localStorage.setItem("userData", JSON.stringify(action.payload.data));
       })
       .addCase(getUserData.rejected, (state, action) => {
         state.status = "failed";
@@ -149,7 +169,19 @@ const userSlice = createSlice({
       .addCase(resetPassword.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
-      });
+      })
+      .addCase(updateProfile.pending, (state, action) => {
+        state.status = "loading";
+      })
+      .addCase(updateProfile.fulfilled, (state, action) => {
+        state.status = "succeded";
+        state.userData = action.payload.result;
+        localStorage.setItem("userData", JSON.stringify(action.payload.result))
+      })
+      .addCase(updateProfile.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
   },
 });
 

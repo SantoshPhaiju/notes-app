@@ -202,7 +202,7 @@ const updateUserProfile = async (req, res) => {
     }
   } catch (error) {
     res.status(500).send({ error: "Internal Server Error" });
-    console.log(error);
+    // console.log(error);
   }
 };
 

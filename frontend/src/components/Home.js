@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { fetchNotes } from "../features/notes/notesSlice";
+import { getUserData } from "../features/user/userSlice";
 import Notes from "./Notes";
 import NotesItem from "./NotesItem";
 
@@ -16,6 +17,7 @@ const Home = () => {
       navigate("/login");
     } else {
       dispatch(fetchNotes());
+      dispatch(getUserData())
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -45,7 +47,7 @@ const Home = () => {
     <div className="w-[75%] mx-auto">
       <h1 className="text-3xl my-4 font-sans text-purple-900 font-semibold text-center">
         Welcome Back&nbsp;
-        {userData && capitalize(userData.data.username)}
+        {userData && capitalize(userData.username)}
       </h1>
       <hr className="mb-6" />
       <Notes />

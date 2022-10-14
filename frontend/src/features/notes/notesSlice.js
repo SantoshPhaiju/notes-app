@@ -150,6 +150,6 @@ const notesSlice = createSlice({
   },
 });
 
-export const { logout } = notesSlice.actions;
+export const { logout, notesLength } = notesSlice.actions;
 
 export default notesSlice.reducer;
