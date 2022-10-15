@@ -119,6 +119,9 @@ const notesSlice = createSlice({
         state.status = "succeded";
         const newNote = action.payload.data;
         state.notes = state.notes.concat(newNote);
+        setTimeout(() => {
+          state.addStatus = "idle";
+        }, 5000);
       })
       .addCase(addNote.rejected, (state, action) => {
         state.status = "failed";
@@ -134,6 +137,9 @@ const notesSlice = createSlice({
         const newNotes = state.notes.filter((note) => {
           return note._id !== deletedNote._id;
         });
+        setTimeout(() => {
+          state.deleteStatus = "idle";
+        }, 5000);
         state.notes = newNotes;
       })
       .addCase(deleteNote.rejected, (state, action) => {
@@ -151,6 +157,7 @@ const notesSlice = createSlice({
         const notes = state.notes.filter((note) => note._id !== _id);
         state.notes = [...notes, action.payload.updatedNote];
         // console.log(action.payload.updatedNote);
+        
       })
       .addCase(editNote.rejected, (state, action) => {
         state.status = "failed";

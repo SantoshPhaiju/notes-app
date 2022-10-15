@@ -31,7 +31,11 @@ const Notes = () => {
   useEffect(() =>{
     if(notes.addStatus === "succeded"){
       toastSuccess("Note Successfully added");
+      setTimeout(() => {
+        notes.editStatus = "idle";
+      }, 5000);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [notes.addStatus, toastSuccess]);
   useEffect(() =>{
     if(notes.deleteStatus === "succeded"){
