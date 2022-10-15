@@ -1,20 +1,43 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useFormik } from "formik";
 import { addNoteSchema } from "../schemas";
 import { } from "react-router-dom";
-import {useDispatch} from "react-redux"
+import {useDispatch, useSelector} from "react-redux"
 import { addNote } from "../features/notes/notesSlice";
+import toastContext from "./context/toastContext";
+import { ToastContainer } from "react-toastify";
 
 
 const Notes = () => {
   const [show, setShow] = useState(false);
   const dispatch = useDispatch();
+  const notes = useSelector(state => state.notes);
+  
+  const context = useContext(toastContext);
+  const {toastSuccess} = context;
   const noteData = {
     title: "",
     description: "",
     category: "",
   };
+
+
+  useEffect(() =>{
+    if(notes.editStatus === "succeded"){
+      toastSuccess("Your note is successfully updated.");
+    }
+  }, [notes.editStatus, toastSuccess]);
+  useEffect(() =>{
+    if(notes.addStatus === "succeded"){
+      toastSuccess("Note Successfully added");
+    }
+  }, [notes.addStatus, toastSuccess]);
+  useEffect(() =>{
+    if(notes.deleteStatus === "succeded"){
+      toastSuccess("Your note is successfully deleted.");
+    }
+  }, [notes.deleteStatus, toastSuccess]);
 
   const { handleBlur, handleSubmit, handleChange, errors, values, touched } =
     useFormik({
@@ -30,6 +53,18 @@ const Notes = () => {
     });
   return (
     <>
+    <ToastContainer
+          position="bottom-left"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+        />
       <div className="addBtn">
         <button
           onClick={() => {

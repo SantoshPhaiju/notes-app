@@ -12,7 +12,7 @@ const Login = () => {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
   const context = useContext(toastContext);
-  const {toastError} = context;
+  const { toastError } = context;
 
   const token = localStorage.getItem("token");
   useEffect(() => {
@@ -25,11 +25,11 @@ const Login = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token, navigate]);
 
-  useEffect(() =>{
-      if(user.error){
-          toastError(user.error);
-      }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    if (user.error) {
+      toastError(user.error);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.success, user.error]);
 
   const credentials = {
@@ -47,22 +47,21 @@ const Login = () => {
       },
     });
 
-
   return (
     <>
       <div className="w-full max-w-xs m-auto mt-20">
-      <ToastContainer
-        position="bottom-left"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-      />
+        <ToastContainer
+          position="bottom-left"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+        />
         <form
           onSubmit={handleSubmit}
           className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"

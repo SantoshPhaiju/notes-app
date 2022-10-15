@@ -75,6 +75,9 @@ const initialState = {
   notes: [],
   status: "idle",
   error: null,
+  editStatus: "idle",
+  addStatus: "idle",
+  deleteStatus: "idle",
 };
 
 const notesSlice = createSlice({
@@ -109,8 +112,10 @@ const notesSlice = createSlice({
       })
       .addCase(addNote.pending, (state, action) => {
         state.status = "loading";
+        state.addStatus = "loading";
       })
       .addCase(addNote.fulfilled, (state, action) => {
+        state.addStatus = "succeded";
         state.status = "succeded";
         const newNote = action.payload.data;
         state.notes = state.notes.concat(newNote);
@@ -120,9 +125,11 @@ const notesSlice = createSlice({
       })
       .addCase(deleteNote.pending, (state, action) => {
         state.status = "loading";
+        state.deleteStatus = "loading";
       })
       .addCase(deleteNote.fulfilled, (state, action) => {
         state.status = "succeded";
+        state.deleteStatus = "succeded";
         const deletedNote = action.payload.note;
         const newNotes = state.notes.filter((note) => {
           return note._id !== deletedNote._id;
@@ -135,9 +142,11 @@ const notesSlice = createSlice({
       })
       .addCase(editNote.pending, (state, action) => {
         state.status = "loading";
+        state.editStatus = "loading";
       })
       .addCase(editNote.fulfilled, (state, action) => {
         state.status = "succeded";
+        state.editStatus = "succeded";
         const { _id } = action.payload.updatedNote;
         const notes = state.notes.filter((note) => note._id !== _id);
         state.notes = [...notes, action.payload.updatedNote];

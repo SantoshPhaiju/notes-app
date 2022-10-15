@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, {  useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useDispatch } from "react-redux";
+import { useDispatch,  } from "react-redux";
 import { deleteNote, editNote } from "../features/notes/notesSlice";
 import { useFormik } from "formik";
 import { addNoteSchema } from "../schemas";
@@ -23,6 +23,8 @@ const NotesItem = (props) => {
       setShow(false);
     }
   };
+
+  
 
   const updatedNoteData = {
     title: props.data.title,
