@@ -16,6 +16,7 @@ const Profile = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [selectedImage, setSelectedImage] = useState([]);
+  const [show, setShow] = useState(false);
   useEffect(() => {
     if (!localStorage.getItem("token")) {
       navigate("/login");
@@ -99,15 +100,15 @@ const Profile = () => {
             </h2>
           </div>
         </div>
-        <div className="details w-full border grid grid-cols-12 gap-10">
+        <div className="details w-full grid grid-cols-12 gap-10 bg-gray-50 shadow-lg mb-10 shadow-gray-600/40 mt-4">
           <div className="left col-span-6 ml-4">
             <div className="buttons my-6">
-              <button className="px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">
+              <button className="px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out" onClick={e => setShow(!show)}>
                 Edit Details
               </button>
             </div>
-            <form action="" onSubmit={handleSubmit}>
-              <div className="flex items-center gap-5 w-[500px] flex-col">
+            {show && <form action="" onSubmit={handleSubmit} className="bg-indigo-500/50 py-8 px-4 my-6 rounded-lg shadow-xl shadow-gray-700/50">
+              <div className="flex items-center gap-5 w-[500px] flex-col ">
                 <div className="formGroup flex flex-row gap-2 items-center w-full">
                   <label
                     htmlFor="username"
@@ -181,11 +182,11 @@ const Profile = () => {
                 })}
               <button
                 type="submit"
-                className=" mt-4  mb-4 px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
+                className=" mt-4  mb-4 px-10 py-2.5 bg-blue-600 text-white font-medium text-lg leading-tight uppercase rounded-md shadow-xl hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
               >
                 Update
               </button>
-            </form>
+            </form>}
           </div>
           <div className="left col-span-6 flex items-center justify-center">
             <h2 className="text-xl font-work-sans font-thin">Email: {email}</h2>

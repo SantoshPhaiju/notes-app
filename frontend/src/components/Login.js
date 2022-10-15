@@ -1,15 +1,18 @@
-import React, { useEffect, useRef } from "react";
+import React, { useContext, useEffect } from "react";
 import { useFormik } from "formik";
 import { loginSchema } from "../schemas";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserData, selectUser, userLogin } from "../features/user/userSlice";
+import { ToastContainer } from "react-toastify";
+import toastContext from "./context/toastContext";
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
-  const errorRef = useRef();
+  const context = useContext(toastContext);
+  const {toastError} = context;
 
   const token = localStorage.getItem("token");
   useEffect(() => {
@@ -23,10 +26,11 @@ const Login = () => {
   }, [token, navigate]);
 
   useEffect(() =>{
-    if(user.error){
-      hide();
-    }
-  }, [user.error])
+      if(user.error){
+          toastError(user.error);
+      }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user.success, user.error]);
 
   const credentials = {
     email: "",
@@ -43,20 +47,22 @@ const Login = () => {
       },
     });
 
-  const hide = () => {
-    setTimeout(() => {
-      errorRef.current.classList.add("hidden");
-    }, 3000);
-  };
 
   return (
     <>
       <div className="w-full max-w-xs m-auto mt-20">
-        {user.error && (
-          <p className="text-red-700 text-center font-mono" ref={errorRef}>
-            {user.error}
-          </p>
-        )}
+      <ToastContainer
+        position="bottom-left"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
         <form
           onSubmit={handleSubmit}
           className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"

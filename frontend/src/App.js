@@ -8,10 +8,13 @@ import Register from "./components/Register";
 import Profile from "./components/Profile";
 import ForgetPassword from "./components/ForgetPassword";
 import ResetPassword from "./components/ResetPassword";
+import ToastState from "./components/context/ToastState";
 
 const App = () => {
   return (
     <>
+    <ToastState>
+
       <Router>
         <Header />
         <div className="w-[88%] m-auto min-h-[93vh]">
@@ -27,6 +30,7 @@ const App = () => {
         </div>
         <Footer />
       </Router>
+    </ToastState>
     </>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { signupSchema } from "../schemas";
@@ -6,25 +6,60 @@ import { FcAddImage } from "react-icons/fc";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux";
-import { getRegistrationMessage, registerUser } from "../features/user/userSlice";
+import {
+  getRegistrationMessage,
+  registerUser,
+} from "../features/user/userSlice";
+import toastContext from "./context/toastContext";
 
 const Register = () => {
   const [selectedImage, setSelectedImage] = useState([]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const registrationMsg = useSelector(getRegistrationMessage);
+  const context = useContext(toastContext);
+  const { toastSuccess, toastError } = context;
 
   useEffect(() => {
     if (localStorage.getItem("token")) {
       navigate("/");
     }
-    if(registrationMsg.success === true){
-      navigate("/login");
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   });
-  const errorRef = useRef();
 
+  useEffect(() => {
+    if (registrationMsg.success === false) {
+      // toast.error(`${registrationMsg.error}`, {
+      //   position: "bottom-left",
+      //   autoClose: 5000,
+      //   hideProgressBar: false,
+      //   closeOnClick: true,
+      //   pauseOnHover: true,
+      //   draggable: true,
+      //   // progress: ,
+      //   theme: "colored",
+      // });
+      toastError(registrationMsg.error);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [registrationMsg.success, registrationMsg.error]);
+
+  useEffect(() => {
+    if (registrationMsg.success === true) {
+      // toast.success(`${registrationMsg.data}`, {
+      //   position: "bottom-left",
+      //   autoClose: 5000,
+      //   hideProgressBar: false,
+      //   closeOnClick: true,
+      //   pauseOnHover: true,
+      //   draggable: true,
+      //   // progress: ,
+      //   theme: "colored",
+      // });
+      toastSuccess(registrationMsg.data);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [registrationMsg, registrationMsg.data]);
 
   const credentials = {
     email: "",
@@ -53,7 +88,7 @@ const Register = () => {
       if (values.picture) {
         formdata.append("picture", values.picture, values.picture.name);
       }
-      dispatch(registerUser(formdata))
+      dispatch(registerUser(formdata));
       action.resetForm();
       setSelectedImage([]);
     },
@@ -73,38 +108,21 @@ const Register = () => {
     setFieldValue("picture", e.target.files[0]);
   };
 
-  useEffect(() =>{
-    if(registrationMsg.success === false){
-      hide();
-    }
-  }, [registrationMsg.success])
-
-  const hide = () => {
-    setTimeout(() => {
-      errorRef.current.classList.add("hidden");
-    }, 3000);
-  };
-
   return (
     <div>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
       <div className="w-full max-w-xs m-auto mt-20">
-        
-      {registrationMsg.success === true && registrationMsg ?  <p className="text-black text-center font-mono">
-          {registrationMsg.data}
-        </p> : <p className="text-black text-center font-mono" ref={errorRef}>
-          {registrationMsg.error}
-        </p>}
+        <ToastContainer
+          position="bottom-left"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+        />
         <form
           onSubmit={handleSubmit}
           className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
