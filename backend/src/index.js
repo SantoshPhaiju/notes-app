@@ -3,7 +3,7 @@ const cors = require("cors");
 const notes = require("../data/notes");
 const connnectToDb = require("../config/db");
 const dotenv = require("dotenv");
-const path = require("path")
+const path = require("path");
 const { errorHandler, notFound } = require("../middlewares/errorMiddleware");
 
 dotenv.config();
@@ -14,19 +14,16 @@ app.use(cors());
 connnectToDb();
 app.use(express.json());
 
-
 app.get("/", (req, res) => {
-    res.send("This api is running here");
+  res.send("This api is running here");
 });
 
-app.use(express.static(path.join(__dirname, "./uploads")))
+app.use(express.static(path.join(__dirname, "./uploads")));
 
 // Routes for the api
 
 app.use("/api/auth", require("../routes/auth"));
 app.use("/api/notes", require("../routes/notes"));
-
-
 
 app.use(notFound);
 app.use(errorHandler);
