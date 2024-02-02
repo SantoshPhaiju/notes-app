@@ -2,43 +2,41 @@ import React, { useContext, useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useFormik } from "formik";
 import { addNoteSchema } from "../schemas";
-import { } from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux"
+import {} from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { addNote } from "../features/notes/notesSlice";
 import toastContext from "./context/toastContext";
 import { ToastContainer } from "react-toastify";
 
-
 const Notes = () => {
   const [show, setShow] = useState(false);
   const dispatch = useDispatch();
-  const notes = useSelector(state => state.notes);
-  
+  const notes = useSelector((state) => state.notes);
+
   const context = useContext(toastContext);
-  const {toastSuccess} = context;
+  const { toastSuccess } = context;
   const noteData = {
     title: "",
     description: "",
     category: "",
   };
 
-
-  useEffect(() =>{
-    if(notes.editStatus === "succeded"){
+  useEffect(() => {
+    if (notes.editStatus === "succeded") {
       toastSuccess("Your note is successfully updated.");
     }
   }, [notes.editStatus, toastSuccess]);
-  useEffect(() =>{
-    if(notes.addStatus === "succeded"){
+  useEffect(() => {
+    if (notes.addStatus === "succeded") {
       toastSuccess("Note Successfully added");
       setTimeout(() => {
         notes.editStatus = "idle";
       }, 5000);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [notes.addStatus, toastSuccess]);
-  useEffect(() =>{
-    if(notes.deleteStatus === "succeded"){
+  useEffect(() => {
+    if (notes.deleteStatus === "succeded") {
       toastSuccess("Your note is successfully deleted.");
     }
   }, [notes.deleteStatus, toastSuccess]);
@@ -57,18 +55,18 @@ const Notes = () => {
     });
   return (
     <>
-    <ToastContainer
-          position="bottom-left"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="colored"
-        />
+      <ToastContainer
+        position="bottom-left"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
       <div className="addBtn">
         <button
           onClick={() => {

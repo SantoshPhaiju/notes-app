@@ -156,8 +156,6 @@ const notesSlice = createSlice({
         const { _id } = action.payload.updatedNote;
         const notes = state.notes.filter((note) => note._id !== _id);
         state.notes = [...notes, action.payload.updatedNote];
-        // console.log(action.payload.updatedNote);
-        
       })
       .addCase(editNote.rejected, (state, action) => {
         state.status = "failed";
